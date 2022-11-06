@@ -8,9 +8,13 @@ export const appRouter = router({
   signUp: publicProcedure
     .input(signUpSchema)
     .mutation(async ({ input, ctx }) => {
-      const { username, email, password } = input;
+      const { name, email, password } = input;
       
-      const exists = await ctx.prisma.user.findFirst({ where: { email } });
+      const exists = await ctx.prisma.user.findFirst({ where: {
+        OR: [
+          { email },
+          { name }
+        ]} });
 
       if (exists) {
         throw new TRPCError({
@@ -22,7 +26,7 @@ export const appRouter = router({
       const hashedPassword = await hash(password,10);
 
       const result = await ctx.prisma.user.create({
-        data: { username, email, password: hashedPassword },
+        data: { name, email, password: hashedPassword },
       });
 
       return {
