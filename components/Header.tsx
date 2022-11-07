@@ -11,7 +11,7 @@ export default function Header() {
   const { data: session, status } = useSession();
   console.log(session);
   return (
-    <div className="bg-white w-screen shadow-md sticky top-0 border py-3 px-6">
+    <div className="bg-white w-screen shadow-md sticky z-50 top-0 border py-3 px-6">
       <div className="flex justify-between">
         <Link href="/" className="flex items-center">
           <Image
@@ -20,6 +20,7 @@ export default function Header() {
             alt=""
             width={40}
             height={40}
+            priority
           />
           <span className="ml-2 font-semibold text-[#252C32] max-md:hidden">
             Interview PlayBook

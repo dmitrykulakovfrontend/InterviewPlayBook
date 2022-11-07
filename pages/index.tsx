@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>Interviewistic</title>
+        <title>Interview PlayBook</title>
         <meta
           name="description"
           content="Next-gen web application to improve your answers in interviews!"
