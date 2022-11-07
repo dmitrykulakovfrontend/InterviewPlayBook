@@ -56,7 +56,7 @@ export default function SignIn({
             width={80}
             height={80}
           />
-          <span className="ml-2 text-3xl font-semibold text-[#252C32]">
+          <span className="ml-2 text-3xl text-center font-semibold text-[#252C32]">
             Interview PlayBook
           </span>
         </Link>
@@ -107,7 +107,7 @@ export default function SignIn({
             </div>
           </div>
           <div className="py-5">
-            <div className="flex flex-wrap justify-between w-full gap-1">
+            <div className="flex flex-wrap justify-center w-full gap-1">
               <Link href="/auth/signup">
                 <button className="text-center sm:text-left whitespace-nowrap transition duration-200 mx-5 px-5 py-4 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
                   <FontAwesomeIcon icon={faSignIn} />
