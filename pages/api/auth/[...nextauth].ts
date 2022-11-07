@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import { AdapterUser } from "next-auth/adapters"
 import { JWT } from "next-auth/jwt"
 import GithubProvider from "next-auth/providers/github"
@@ -7,8 +7,21 @@ import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "utils/prisma"
 import {compare} from "bcrypt"
-export const authOptions: next = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.role = user.role
+      }
+  
+      return token
+    },
+    session: async ({ session, token }) => {
+      session.user.role = token.role
+      return session
+    },
+  },
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID,
@@ -22,7 +35,6 @@ export const authOptions: next = {
   CredentialsProvider({
     name: "Credentials",
     credentials: {
-      username: { label: "Username", type: "text", placeholder: "jsmith" },
       password: { label: "Password", type: "password" },
       email: {label: "Email", type: "text", placeholder: "jsmith@gmail.com"}
     },
@@ -48,7 +60,6 @@ export const authOptions: next = {
   },
   pages: {
     signIn: '/auth/signin',
-    signUp: '/auth/signup',
   },
   session: {
      strategy: "jwt",
