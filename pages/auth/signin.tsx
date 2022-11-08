@@ -6,25 +6,37 @@ import logoIcon from "public/icons/interview-svgrepo-com.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightLong,
-  faUnlock,
-  faLifeRing,
   faArrowLeftLong,
   faSignIn,
 } from "@fortawesome/free-solid-svg-icons";
 import { getProviders, signIn } from "next-auth/react";
 import { InferGetServerSidePropsType } from "next";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, Login } from "utils/validations";
+import { signInSchema, SignIn as SignInType } from "utils/validations";
+import Form from "components/Form";
+import Input from "components/Input";
+import { toast } from "react-toastify";
+import router from "next/router";
 
-function submit(data: FieldValues) {
+async function submit(data: SignInType) {
   const { password, email } = data;
   console.log(password);
-  signIn("credentials", {
-    callbackUrl: "/",
+  const response = await signIn("credentials", {
+    redirect: false,
     password,
     email,
   });
+  if (response?.error) {
+    toast(response.error, {
+      type: "error",
+    });
+    return;
+  }
+  toast(`Welcome!`, {
+    type: "success",
+  });
+  router.push("/");
 }
 
 export default function SignIn({
@@ -34,8 +46,8 @@ export default function SignIn({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(loginSchema),
+  } = useForm<SignInType>({
+    resolver: zodResolver(signInSchema),
   });
   return (
     <Layout>
@@ -60,35 +72,30 @@ export default function SignIn({
             Interview PlayBook
           </span>
         </Link>
-        <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
-          <form onSubmit={handleSubmit((d) => submit(d))} className="px-5 py-7">
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">
-              E-mail
-            </label>
-            {errors.email?.message && <p>{errors.email.message.toString()}</p>}
-            <input
-              {...register("email")}
-              className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+        <div className="bg-white shadow-lg w-full rounded-lg divide-y divide-gray-200">
+          <Form
+            buttonLabel="Login"
+            register={register}
+            handleSubmit={handleSubmit}
+            onSubmit={(d: SignInType) => submit(d)}
+            icon={faArrowRightLong}
+          >
+            <Input
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              error={errors.email?.message}
+              autoFocus
+              label="Email"
             />
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">
-              Password
-            </label>
-            {errors.password?.message && (
-              <p>{errors.password.message.toString()}</p>
-            )}
-            <input
-              {...register("password")}
+            <Input
+              name="password"
               type="password"
-              className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+              placeholder="Password"
+              label="Password"
+              error={errors.password?.message}
             />
-            <button
-              type="submit"
-              className="transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-            >
-              <span className="inline-block mr-2">Login</span>
-              <FontAwesomeIcon icon={faArrowRightLong} />
-            </button>
-          </form>
+          </Form>
           <div className="p-5">
             <div className="flex flex-wrap w-full gap-1">
               {providers &&

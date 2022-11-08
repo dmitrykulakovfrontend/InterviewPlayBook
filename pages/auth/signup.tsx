@@ -8,25 +8,26 @@ import {
   faArrowRightLong,
   faArrowLeftLong,
 } from "@fortawesome/free-solid-svg-icons";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema } from "utils/validations";
-import { useRouter } from "next/router";
+import { SignUp, signUpSchema } from "utils/validations";
+import router from "next/router";
 import { trpc } from "utils/trpc";
 import { toast } from "react-toastify";
+import Form from "components/Form";
+import Input from "components/Input";
 
 export default function SignIn() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<SignUp>({
     resolver: zodResolver(signUpSchema),
   });
-  const router = useRouter();
   const { mutate: SignUpUser, isLoading } = trpc.signUp.useMutation({
     onSuccess(data) {
-      toast(`Welcome ${data.result}! Please log in now.`, {
+      toast(`Please log in now with ${data.result}.`, {
         type: "success",
         delay: 1000,
       });
@@ -39,6 +40,7 @@ export default function SignIn() {
       });
     },
   });
+  const onSubmit = (data: SignUp) => SignUpUser(data);
   return (
     <Layout>
       <Head>
@@ -50,7 +52,10 @@ export default function SignIn() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="xs:p-0 md:max-w-md">
-        <Link href="/" className="flex flex-col items-center justify-center">
+        <Link
+          href="/"
+          className="flex flex-col mb-4 items-center justify-center"
+        >
           <Image
             src={logoIcon}
             className="h-20 w-20 text-gray-500"
@@ -62,47 +67,39 @@ export default function SignIn() {
             Interview PlayBook
           </span>
         </Link>
-        <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
-          <form
-            onSubmit={handleSubmit((d: any) => SignUpUser(d))}
-            className="px-5 py-7"
+        <div className="bg-white shadow-lg w-full rounded-lg divide-y divide-gray-200">
+          <Form
+            buttonLabel="Sign Up"
+            register={register}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            icon={faArrowRightLong}
           >
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">
-              Name
-            </label>
-            {errors.name?.message && <p>{errors.name.message.toString()}</p>}
-            <input
-              {...register("name")}
-              className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+            <Input
+              name="name"
+              type="name"
+              placeholder="Name"
+              label="Name"
+              error={errors.name?.message}
             />
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">
-              E-mail
-            </label>
-            {errors.email?.message && <p>{errors.email.message.toString()}</p>}
-            <input
-              {...register("email")}
-              className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+            <Input
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              error={errors.email?.message}
+              autoFocus
+              label="Email"
             />
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">
-              Password
-            </label>
-            {errors.password?.message && (
-              <p>{errors.password.message.toString()}</p>
-            )}
-            <input
-              {...register("password")}
+            <Input
+              name="password"
               type="password"
-              className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+              placeholder="Password"
+              label="Password"
+              error={errors.password?.message}
             />
-            <button
-              type="submit"
-              className="transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-            >
-              <span className="inline-block mr-2">Sign Up</span>
-              <FontAwesomeIcon icon={faArrowRightLong} />
-            </button>
-          </form>
+          </Form>
         </div>
+
         <div className="py-5">
           <div className="grid grid-cols-2 gap-1">
             <div className="text-center sm:text-left whitespace-nowrap">
