@@ -44,7 +44,8 @@ export const authOptions: NextAuthOptions = {
       if (!user) throw new Error('No user found with the email');
       if (!credentials?.password || !user.password) return null;
 
-      const validPassword = compare(credentials.password, user.password);
+      const validPassword = await compare(credentials.password, user.password);
+      console.log(validPassword);
 
       if (!validPassword) throw new Error('Password doesnt match');
       console.log('valid all right')
