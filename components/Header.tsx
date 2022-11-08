@@ -5,11 +5,14 @@ import React from "react";
 import logoIcon from "public/icons/interview-svgrepo-com.svg";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog, faPlay, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlay, faShield } from "@fortawesome/free-solid-svg-icons";
+import Spinner from "./Spinner";
+import router from "next/router";
 
 export default function Header() {
   const { data: session, status } = useSession();
   console.log(session);
+
   return (
     <div className="bg-white w-screen shadow-md sticky z-50 top-0 border py-3 px-6">
       <div className="flex justify-between">
@@ -26,47 +29,72 @@ export default function Header() {
             Interview PlayBook
           </span>
         </Link>
+        {status === "loading" ? (
+          <Spinner />
+        ) : (
+          <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
+            <HeaderLink href="/quizzes" title="Quizzes" icon={faPlay} />
+            {session && (
+              <HeaderLink href="/settings" title="Settings" icon={faCog} />
+            )}
 
-        <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
-          <HeaderLink href="/quizzes" title="Quizzes" icon={faPlay} />
-          <HeaderLink href="/settings" title="Settings" icon={faCog} />
-          {session ? (
-            <>
-              {session.user?.image ? (
-                <Image
-                  src={session.user.image}
-                  alt="Your profile icon"
-                  className="h-8 shadow-lg ring-1 rounded-full"
-                  width={32}
-                  height={32}
-                />
-              ) : (
-                <div className="h-8 w-8 bg-[url('../public/blank-profile-picture.png')] bg-no-repeat bg-center bg-cover bg-white  shadow-lg ring-black ring-1 rounded-full" />
-              )}
+            {session?.user.role === "admin" && (
+              <HeaderLink href="/admin" title="Admin" icon={faShield} />
+            )}
+            {session ? (
+              <>
+                {session.user?.image ? (
+                  <Image
+                    src={session.user.image}
+                    alt="Your profile icon"
+                    className="h-8 shadow-lg ring-1 rounded-full"
+                    width={32}
+                    height={32}
+                  />
+                ) : (
+                  <div className="h-8 w-8 bg-[url('../public/blank-profile-picture.png')] bg-no-repeat bg-center bg-cover bg-white  shadow-lg ring-black ring-1 rounded-full" />
+                )}
 
-              <span
-                className="text-sm font-medium max-sm:hidden h-fit overflow-ellipsis max-w-[12ch] whitespace-nowrap overflow-hidden"
-                title={session.user?.name!}
-              >
-                {session.user?.name}
-              </span>
+                <span
+                  className="text-sm font-medium max-sm:hidden h-fit overflow-ellipsis max-w-[12ch] whitespace-nowrap overflow-hidden"
+                  title={session.user?.name!}
+                >
+                  {session.user.role === "admin" && (
+                    <span className="text-xs text-red-400 border-solid border border-red-400  mr-2">
+                      Admin{" "}
+                    </span>
+                  )}
+                  {session.user?.name}
+                </span>
 
-              <button
-                onClick={() => signOut()}
-                className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
-              >
-                <span className="text-sm font-medium">Sign Out</span>
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/auth/signin"
-              className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
-            >
-              <span className="text-sm font-medium">Sign in</span>
-            </Link>
-          )}
-        </div>
+                <button
+                  onClick={() => {
+                    signOut({ redirect: false });
+                    router.push("/");
+                  }}
+                  className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
+                >
+                  <span className="text-sm font-medium">Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/signin"
+                  className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
+                >
+                  <span className="text-sm font-medium">Sign in</span>
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
+                >
+                  <span className="text-sm font-medium">Sign Up</span>
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

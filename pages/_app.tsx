@@ -15,7 +15,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastContainer position={"top-center"} />
+        <ToastContainer position={"top-center"} autoClose={2000} />
         <Component {...pageProps} />
       </QueryClientProvider>
     </SessionProvider>

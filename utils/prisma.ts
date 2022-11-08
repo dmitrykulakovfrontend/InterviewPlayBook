@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client"
 
 declare global {
-  var prisma: PrismaClient | undefined
+  var client: PrismaClient | undefined
 }
 
-const client = globalThis.prisma || new PrismaClient()
-if (process.env.NODE_ENV !== "production") globalThis.prisma = client
+const prisma = globalThis.client || new PrismaClient()
+if (process.env.NODE_ENV !== "production") globalThis.client = prisma
 
-export default client
+export default prisma
