@@ -91,7 +91,7 @@ export default function SignIn() {
             )}
             <input
               {...register("password")}
-              type="text"
+              type="password"
               className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
             />
             <button
