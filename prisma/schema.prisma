@@ -59,12 +59,24 @@ model VerificationToken {
 }
 
 model Quizz {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String    @unique
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String     @unique
   description String
-  rating      Float     @default(5.0)
-  timesPlayed Int       @default(0)
+  rating      Float      @default(5.0)
+  timesPlayed Int        @default(0)
   comments    Comment[]
+  questions   Question[]
+}
+
+model Question {
+  id                  String @id @default(auto()) @map("_id") @db.ObjectId
+  text                String
+  answer              String
+  answeredCorrectly   Int
+  answeredIncorrectly Int
+  percent             Int    @map("")
+  Quizz               Quizz  @relation(fields: [QuizzId], references: [id])
+  QuizzId             String @db.ObjectId
 }
 
 model Comment {

@@ -1,4 +1,10 @@
-import { faNoteSticky, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClose,
+  faComment,
+  faNoteSticky,
+  faQuestion,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Form from "components/Form";
@@ -8,8 +14,8 @@ import Spinner from "components/Spinner";
 import { InferGetServerSidePropsType } from "next";
 import { useSession } from "next-auth/react";
 import prisma from "utils/prisma";
-import { SignUp, signUpSchema } from "utils/validations";
-import { useForm } from "react-hook-form";
+import { Quizz, QuizzSchema } from "utils/validations";
+import { useForm, useFieldArray } from "react-hook-form";
 
 export default function Admin({
   users,
@@ -22,9 +28,29 @@ export default function Admin({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUp>({ resolver: zodResolver(signUpSchema) });
+    control,
+  } = useForm<Quizz>({
+    resolver: zodResolver(QuizzSchema),
+    defaultValues: {
+      title: "Your quizz name",
+      description: "Your quizz description",
+      question: [
+        { text: "", answer: "" },
+        { text: "", answer: "" },
+        { text: "", answer: "" },
+        { text: "", answer: "" },
+        { text: "", answer: "" },
+      ],
+    },
+  });
 
-  const onSubmit = (data: SignUp) => console.log(data);
+  const { fields, append, prepend, remove, swap, move, insert, replace } =
+    useFieldArray({
+      control,
+      name: "question",
+    });
+
+  const onSubmit = (data: Quizz) => console.log(data);
 
   if (status === "loading") {
     return (
@@ -41,6 +67,7 @@ export default function Admin({
       </Layout>
     );
   }
+  console.log(errors);
   return (
     <Layout>
       <div className="w-full justify-center flex flex-wrap p-4 gap-4">
@@ -58,21 +85,10 @@ export default function Admin({
         </div>
         <div className="bg-blue-500 basis-48 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
           <div className="flex justify-center items-center w-14 h-14 bg-white rounded-full transition-all duration-300 transform group-hover:-translate-y-2">
-            <svg
-              width="30"
-              height="30"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="stroke-current text-blue-800 dark:text-gray-800 transform transition-transform duration-500 ease-in-out"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              ></path>
-            </svg>
+            <FontAwesomeIcon
+              icon={faComment}
+              className=" text-blue-800 dark:text-gray-800 transform transition-transform duration-500 ease-in-out"
+            />
           </div>
           <div className="text-right ml-5">
             <p className="text-2xl">{comments}</p>
@@ -81,21 +97,10 @@ export default function Admin({
         </div>
         <div className="bg-blue-500 basis-48 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
           <div className="flex justify-center items-center w-14 h-14 bg-white rounded-full transition-all duration-300 transform group-hover:-translate-y-2">
-            <svg
-              width="30"
-              height="30"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="stroke-current text-blue-800 dark:text-gray-800 transform transition-transform duration-500 ease-in-out"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              ></path>
-            </svg>
+            <FontAwesomeIcon
+              icon={faQuestion}
+              className=" text-blue-800 dark:text-gray-800 transform transition-transform duration-500 ease-in-out"
+            />
           </div>
           <div className="text-right ml-5">
             <p className="text-2xl">{quizess}</p>
@@ -106,28 +111,82 @@ export default function Admin({
 
       <h1 className="text-center text-2xl font-bold">Create quizz</h1>
       <Form
-        className="border w-fit m-auto"
-        buttonLabel="Change Email"
+        className="border w-2/3 m-auto"
         register={register}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         icon={faNoteSticky}
       >
         <Input
-          name="email"
-          type="email"
-          placeholder="Enter your email"
-          error={errors.email?.message}
+          name="title"
+          type="text"
+          placeholder="Quizz name"
+          error={errors.title?.message}
           autoFocus
-          label="Email"
+          label="Quizz name"
         />
         <Input
-          name="password"
-          type="password"
-          placeholder="Password"
-          label="Password"
-          error={errors.password?.message}
+          name="description"
+          textarea
+          placeholder="Quizz description"
+          label="Quizz description"
+          error={errors.description?.message}
         />
+        {errors.question?.message && (
+          <span role="alert" className="text-red-400">
+            Quizz must contain atleast 5 questions
+          </span>
+        )}
+        {fields.map((item, index) => {
+          return (
+            <div className="w-full" key={item.id}>
+              <div className="mb-1 w-full flex gap-4 items-center justify-end">
+                <h3>Question {index + 1}</h3>
+                <button
+                  className=" w-fit py-2 px-3 transition duration-200 bg-red-500 hover:bg-red-600 focus:bg-red-700 focus:shadow-sm focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+                  onClick={() => remove(index)}
+                >
+                  <FontAwesomeIcon icon={faClose} />
+                </button>
+              </div>
+              <Input
+                name={`question.${index}.text`}
+                register={register}
+                placeholder="Question"
+                error={errors.question && errors.question[index]?.text?.message}
+                label="Question"
+                textarea
+              />
+              <Input
+                name={`question.${index}.answer`}
+                placeholder="Answer"
+                register={register}
+                label="Answer"
+                error={
+                  errors.question && errors.question[index]?.answer?.message
+                }
+                textarea
+              />
+            </div>
+          );
+        })}
+        <div className="flex gap-4 justify-around">
+          <button
+            type="submit"
+            className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+          >
+            <span className="inline-block mr-2">Create Quizz</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              append({ text: "", answer: "" });
+            }}
+            className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+          >
+            <span className="inline-block mr-2">Add Question</span>
+          </button>
+        </div>
       </Form>
     </Layout>
   );
