@@ -1,10 +1,12 @@
 import React, { InputHTMLAttributes } from "react";
+import type { UseFormRegister, FieldValues, Path } from "react-hook-form";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  name: string;
+interface InputProps<T extends FieldValues>
+  extends InputHTMLAttributes<HTMLElement> {
+  name: Path<T>;
   label: string;
   error?: string;
-  register?: any;
+  register: UseFormRegister<T>;
   className?: string;
   textarea?: boolean;
 }
@@ -12,14 +14,14 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const className =
   "w-full py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 dark:text-gray-50 font-semibold focus:border-blue-500 focus:outline-none";
 
-export default function Input({
+export default function Input<T extends FieldValues>({
   register,
   name,
   error,
   label,
   textarea,
   ...rest
-}: InputProps) {
+}: InputProps<T>) {
   return (
     <>
       <label className="hidden" htmlFor={name}>

@@ -21,9 +21,9 @@ export const QuizzSchema = z.object({
   description: z.string().min(10),
   icon: z
     .any()
-    .refine((file: FileList) => file?.length, `Icon required`)  
-    .refine((file: FileList) => !(file?.length > 1), `Only one icon possible`)
-    .refine((file: FileList) => file[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`),
+    .refine((file) => file?.length, `Icon required`)  
+    .refine((file) => !(file?.length > 1), `Only one icon possible`)
+    .refine((file) => file[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`),
   question: z
     .object({
       text: z

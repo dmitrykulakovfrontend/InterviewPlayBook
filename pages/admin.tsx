@@ -44,11 +44,10 @@ export default function Admin({
     },
   });
 
-  const { fields, append, prepend, remove, swap, move, insert, replace } =
-    useFieldArray({
-      control,
-      name: "question",
-    });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "question",
+  });
 
   const onSubmit = (data: Quizz) => console.log(data);
 
@@ -67,7 +66,6 @@ export default function Admin({
       </Layout>
     );
   }
-  console.log(errors);
   return (
     <Layout>
       <div className="w-full justify-center flex flex-wrap p-4 gap-4">
@@ -120,6 +118,7 @@ export default function Admin({
         <Input
           name="title"
           type="text"
+          register={register}
           placeholder="Quizz name"
           error={errors.title?.message}
           autoFocus
@@ -128,6 +127,7 @@ export default function Admin({
         <Input
           name="description"
           textarea
+          register={register}
           placeholder="Quizz description"
           label="Quizz description"
           error={errors.description?.message}

@@ -2,20 +2,23 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { createElement } from "react";
 import { ReactNode } from "react";
+import type {
+  UseFormRegister,
+  UseFormHandleSubmit,
+  FieldValues,
+} from "react-hook-form";
 
-export type FormProps = {
-  defaultValues?: any;
-  children?: ReactNode;
+export type FormProps<T extends FieldValues> = {
+  children: ReactNode;
   buttonLabel?: string;
-  onSubmit?: any;
-  handleSubmit?: any;
-  register?: any;
+  onSubmit: (data: T) => void;
+  handleSubmit: UseFormHandleSubmit<T>;
+  register: UseFormRegister<T>;
   className?: string;
   icon: IconProp;
 };
 
-export default function Form({
-  defaultValues,
+export default function Form<T extends FieldValues>({
   buttonLabel,
   children,
   onSubmit,
@@ -24,7 +27,7 @@ export default function Form({
   icon,
   className,
   ...rest
-}: FormProps) {
+}: FormProps<T>) {
   return (
     <div className="bg-white w-full rounded-lg">
       <form
