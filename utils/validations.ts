@@ -2,21 +2,39 @@ import * as z from "zod";
 
 export const signInSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(5, {message: 'Password must contain atleast 5 characters'}).max(60, {message: 'Password maximum length is 60'}),
+  password: z
+    .string()
+    .min(5, { message: "Password must contain atleast 5 characters" })
+    .max(60, { message: "Password maximum length is 60" }),
 });
 
 export const signUpSchema = signInSchema.extend({
-  name: z.string().min(3, {message: 'Name must contain atleast 3 characters'}).max(15, {message: 'Name maximum length is 60'}),
+  name: z
+    .string()
+    .min(3, { message: "Name must contain atleast 3 characters" })
+    .max(15, { message: "Name maximum length is 60" }),
 });
 
+const MAX_FILE_SIZE = 500000;
 export const QuizzSchema = z.object({
   title: z.string().min(5).max(40),
   description: z.string().min(10),
-  question: z.object({
-    text: z.string().min(5).endsWith('?', {message: "Question must end with question mark"}),
-    answer: z.string().min(5),
-  }).array().min(5, {message: 'Quizz must contain atleast 5 questions'})
-})
+  icon: z
+    .any()
+    .refine((file: FileList) => file?.length, `Icon required`)  
+    .refine((file: FileList) => !(file?.length > 1), `Only one icon possible`)
+    .refine((file: FileList) => file[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`),
+  question: z
+    .object({
+      text: z
+        .string()
+        .min(5)
+        .endsWith("?", { message: "Question must end with question mark" }),
+      answer: z.string().min(5),
+    })
+    .array()
+    .min(5, { message: "Quizz must contain atleast 5 questions" }),
+});
 
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;

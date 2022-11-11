@@ -35,11 +35,11 @@ export default function Admin({
       title: "Your quizz name",
       description: "Your quizz description",
       question: [
-        { text: "", answer: "" },
-        { text: "", answer: "" },
-        { text: "", answer: "" },
-        { text: "", answer: "" },
-        { text: "", answer: "" },
+        { text: "Question 1?", answer: "Answer 1" },
+        { text: "Question 2?", answer: "Answer 2" },
+        { text: "Question 3?", answer: "Answer 3" },
+        { text: "Question 4?", answer: "Answer 4" },
+        { text: "Question 5?", answer: "Answer 5" },
       ],
     },
   });
@@ -131,6 +131,15 @@ export default function Admin({
           placeholder="Quizz description"
           label="Quizz description"
           error={errors.description?.message}
+        />
+        <Input
+          type="file"
+          accept=".png"
+          name="icon"
+          placeholder="Icon"
+          register={register}
+          label="Icon"
+          error={errors.icon?.message?.toString()}
         />
         {errors.question?.message && (
           <span role="alert" className="text-red-400">
