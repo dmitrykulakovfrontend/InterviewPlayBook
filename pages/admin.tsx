@@ -110,7 +110,6 @@ export default function Admin({
       <h1 className="text-center text-2xl font-bold">Create quizz</h1>
       <Form
         className="border w-2/3 m-auto"
-        register={register}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         icon={faNoteSticky}

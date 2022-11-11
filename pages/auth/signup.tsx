@@ -70,12 +70,12 @@ export default function SignIn() {
         <div className="bg-white shadow-lg w-full rounded-lg divide-y divide-gray-200">
           <Form
             buttonLabel="Sign Up"
-            register={register}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
             icon={faArrowRightLong}
           >
             <Input
+              register={register}
               name="name"
               type="name"
               placeholder="Name"
@@ -83,6 +83,7 @@ export default function SignIn() {
               error={errors.name?.message}
             />
             <Input
+              register={register}
               name="email"
               type="email"
               placeholder="Enter your email"
@@ -91,6 +92,7 @@ export default function SignIn() {
               label="Email"
             />
             <Input
+              register={register}
               name="password"
               type="password"
               placeholder="Password"

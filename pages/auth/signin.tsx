@@ -75,12 +75,12 @@ export default function SignIn({
         <div className="bg-white shadow-lg w-full rounded-lg divide-y divide-gray-200">
           <Form
             buttonLabel="Login"
-            register={register}
             handleSubmit={handleSubmit}
             onSubmit={(d: SignInType) => submit(d)}
             icon={faArrowRightLong}
           >
             <Input
+              register={register}
               name="email"
               type="email"
               placeholder="Enter your email"
@@ -89,6 +89,7 @@ export default function SignIn({
               label="Email"
             />
             <Input
+              register={register}
               name="password"
               type="password"
               placeholder="Password"

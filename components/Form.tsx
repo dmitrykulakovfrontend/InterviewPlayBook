@@ -13,7 +13,6 @@ export type FormProps<T extends FieldValues> = {
   buttonLabel?: string;
   onSubmit: (data: T) => void;
   handleSubmit: UseFormHandleSubmit<T>;
-  register: UseFormRegister<T>;
   className?: string;
   icon: IconProp;
 };
@@ -23,7 +22,6 @@ export default function Form<T extends FieldValues>({
   children,
   onSubmit,
   handleSubmit,
-  register,
   icon,
   className,
   ...rest
@@ -44,7 +42,6 @@ export default function Form<T extends FieldValues>({
                 ? createElement(child.type, {
                     ...{
                       ...child.props,
-                      register,
                       key: child.props.name,
                     },
                   })
