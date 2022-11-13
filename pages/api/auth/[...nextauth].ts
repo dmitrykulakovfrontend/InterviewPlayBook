@@ -55,16 +55,16 @@ export const authOptions: NextAuthOptions = {
   })
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  jwt: {
-    secret: process.env.JWT_SECRET,
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
   pages: {
     signIn: '/auth/signin',
   },
   session: {
      strategy: "jwt",
-     maxAge: 3000,
-  }
+     maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
 }
 export default NextAuth(authOptions)

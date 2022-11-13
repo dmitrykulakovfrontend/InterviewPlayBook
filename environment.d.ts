@@ -7,6 +7,10 @@ declare global {
       GITHUB_SECRET:string
       GOOGLE_ID:string
       GOOGLE_SECRET:string
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME:string
+      CLOUDINARY_KEY:string
+      CLOUDINARY_SECRET:string
+      CLOUDINARY_URL:string
     }
   }
 }

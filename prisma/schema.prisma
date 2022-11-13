@@ -62,6 +62,7 @@ model Quizz {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String     @unique
   description String
+  icon        String
   rating      Float      @default(5.0)
   timesPlayed Int        @default(0)
   comments    Comment[]
@@ -72,9 +73,8 @@ model Question {
   id                  String @id @default(auto()) @map("_id") @db.ObjectId
   text                String
   answer              String
-  answeredCorrectly   Int
-  answeredIncorrectly Int
-  percent             Int    @map("")
+  answeredCorrectly   Int    @default(0)
+  answeredIncorrectly Int    @default(0)
   Quizz               Quizz  @relation(fields: [QuizzId], references: [id])
   QuizzId             String @db.ObjectId
 }

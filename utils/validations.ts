@@ -17,14 +17,10 @@ export const signUpSchema = signInSchema.extend({
 
 const MAX_FILE_SIZE = 500000;
 export const QuizzSchema = z.object({
-  title: z.string().min(5).max(40),
+  name: z.string().min(5).max(40),
   description: z.string().min(10),
-  icon: z
-    .any()
-    .refine((file) => file?.length, `Icon required`)  
-    .refine((file) => !(file?.length > 1), `Only one icon possible`)
-    .refine((file) => file[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`),
-  question: z
+  icon: z.any(),
+  questions: z
     .object({
       text: z
         .string()

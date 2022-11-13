@@ -16,11 +16,14 @@ import { useSession } from "next-auth/react";
 import prisma from "utils/prisma";
 import { Quizz, QuizzSchema } from "utils/validations";
 import { useForm, useFieldArray } from "react-hook-form";
+import { trpc } from "utils/trpc";
+import { useRef } from "react";
+import getBase64 from "utils/getBase64";
 
 export default function Admin({
-  users,
-  comments,
-  quizess,
+  usersAmount,
+  commentsAmount,
+  quizessAmount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: session, status } = useSession();
 
@@ -32,9 +35,9 @@ export default function Admin({
   } = useForm<Quizz>({
     resolver: zodResolver(QuizzSchema),
     defaultValues: {
-      title: "Your quizz name",
+      name: "Your quizz name",
       description: "Your quizz description",
-      question: [
+      questions: [
         { text: "Question 1?", answer: "Answer 1" },
         { text: "Question 2?", answer: "Answer 2" },
         { text: "Question 3?", answer: "Answer 3" },
@@ -46,10 +49,25 @@ export default function Admin({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "question",
+    name: "questions",
   });
 
-  const onSubmit = (data: Quizz) => console.log(data);
+  const onSubmit = async (data: Quizz) => {
+    let base64Icon = await getBase64(data.icon[0]);
+    const { description, questions, name } = data;
+    createQuizz({
+      name,
+      description,
+      questions,
+      icon: base64Icon,
+    });
+    return;
+  };
+  const {
+    mutate: createQuizz,
+    isLoading,
+    isError,
+  } = trpc.createQuizz.useMutation();
 
   if (status === "loading") {
     return (
@@ -77,7 +95,7 @@ export default function Admin({
             />
           </div>
           <div className="text-right ml-5">
-            <p className="text-2xl">{users}</p>
+            <p className="text-2xl">{usersAmount}</p>
             <p>Users</p>
           </div>
         </div>
@@ -89,7 +107,7 @@ export default function Admin({
             />
           </div>
           <div className="text-right ml-5">
-            <p className="text-2xl">{comments}</p>
+            <p className="text-2xl">{commentsAmount}</p>
             <p>Comments</p>
           </div>
         </div>
@@ -101,7 +119,7 @@ export default function Admin({
             />
           </div>
           <div className="text-right ml-5">
-            <p className="text-2xl">{quizess}</p>
+            <p className="text-2xl">{quizessAmount}</p>
             <p>Quizess</p>
           </div>
         </div>
@@ -115,11 +133,11 @@ export default function Admin({
         icon={faNoteSticky}
       >
         <Input
-          name="title"
+          name="name"
           type="text"
           register={register}
           placeholder="Quizz name"
-          error={errors.title?.message}
+          error={errors.name?.message}
           autoFocus
           label="Quizz name"
         />
@@ -140,7 +158,7 @@ export default function Admin({
           label="Icon"
           error={errors.icon?.message?.toString()}
         />
-        {errors.question?.message && (
+        {errors.questions?.message && (
           <span role="alert" className="text-red-400">
             Quizz must contain atleast 5 questions
           </span>
@@ -158,20 +176,22 @@ export default function Admin({
                 </button>
               </div>
               <Input
-                name={`question.${index}.text`}
+                name={`questions.${index}.text`}
                 register={register}
                 placeholder="Question"
-                error={errors.question && errors.question[index]?.text?.message}
+                error={
+                  errors.questions && errors.questions[index]?.text?.message
+                }
                 label="Question"
                 textarea
               />
               <Input
-                name={`question.${index}.answer`}
+                name={`questions.${index}.answer`}
                 placeholder="Answer"
                 register={register}
                 label="Answer"
                 error={
-                  errors.question && errors.question[index]?.answer?.message
+                  errors.questions && errors.questions[index]?.answer?.message
                 }
                 textarea
               />
@@ -201,14 +221,16 @@ export default function Admin({
 }
 
 export async function getServerSideProps() {
-  let users = await prisma.user.count();
-  let comments = await prisma.comment.count();
-  let quizess = await prisma.quizz.count();
+  const [usersAmount, commentsAmount, quizessAmount] = await Promise.all([
+    prisma.user.count(),
+    prisma.comment.count(),
+    prisma.quizz.count(),
+  ]);
   return {
     props: {
-      users,
-      comments,
-      quizess,
+      usersAmount,
+      commentsAmount,
+      quizessAmount,
     },
   };
 }

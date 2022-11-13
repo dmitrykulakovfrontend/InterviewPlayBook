@@ -2,11 +2,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { createElement } from "react";
 import { ReactNode } from "react";
-import type {
-  UseFormRegister,
-  UseFormHandleSubmit,
-  FieldValues,
-} from "react-hook-form";
+import type { UseFormHandleSubmit, FieldValues } from "react-hook-form";
 
 export type FormProps<T extends FieldValues> = {
   children: ReactNode;
