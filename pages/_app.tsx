@@ -4,6 +4,7 @@ import { trpc } from "utils/trpc";
 import { SessionProvider } from "next-auth/react";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "react-toastify/dist/ReactToastify.css";
+import "react-loading-skeleton/dist/skeleton.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
