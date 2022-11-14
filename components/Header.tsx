@@ -22,7 +22,7 @@ export default function Header() {
             <Image
               src={logoIcon}
               className="h-10 w-10 text-gray-500"
-              alt=""
+              alt="Interview PlayBook"
               width={40}
               height={40}
               priority
@@ -34,7 +34,11 @@ export default function Header() {
           <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
             <div className="flex items-center justify-center gap-x-1 rounded-md py-2 px-2">
               <Skeleton circle width={25} height={25} />
-              <Skeleton count={1} width={50} />
+              <Skeleton
+                count={1}
+                width={50}
+                containerClassName="max-sm:hidden"
+              />
             </div>
 
             <Skeleton
