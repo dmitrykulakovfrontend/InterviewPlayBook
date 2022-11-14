@@ -19,6 +19,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { trpc } from "utils/trpc";
 import { useRef } from "react";
 import getBase64 from "utils/getBase64";
+import Skeleton from "react-loading-skeleton";
 
 export default function Admin({
   usersAmount,
@@ -72,7 +73,15 @@ export default function Admin({
   if (status === "loading") {
     return (
       <Layout>
-        <Spinner />
+        <div className="w-full justify-center flex flex-wrap p-4 gap-4">
+          <Skeleton width={192} height={85} />
+          <Skeleton width={192} height={85} />
+          <Skeleton width={192} height={85} />
+        </div>
+        <h1 className="text-center text-2xl font-bold">
+          <Skeleton width={130} />
+        </h1>
+        <Skeleton width={"70vw"} height={800} />
       </Layout>
     );
   }
