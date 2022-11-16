@@ -9,10 +9,11 @@ import { faCog, faPlay, faShield } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "./Spinner";
 import router from "next/router";
 import Skeleton from "react-loading-skeleton";
+import Layout from "./Layout";
 
 export default function Header() {
   const { data: session, status } = useSession();
-  console.log(session);
+  console.log({ session });
 
   if (status === "loading")
     return (
@@ -75,7 +76,7 @@ export default function Header() {
             </span>
           </Link>
           <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
-            <HeaderLink href="/quizzes" title="Quizzes" icon={faPlay} />
+            <HeaderLink href="/" title="Quizzes" icon={faPlay} />
             <>
               <Link
                 href="/auth/signin"
@@ -113,7 +114,7 @@ export default function Header() {
             </span>
           </Link>
           <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
-            <HeaderLink href="/quizzes" title="Quizzes" icon={faPlay} />
+            <HeaderLink href="/" title="Quizzes" icon={faPlay} />
             <HeaderLink href="/settings" title="Settings" icon={faCog} />
 
             {session.user.role === "admin" && (
@@ -156,6 +157,11 @@ export default function Header() {
         </div>
       </div>
     );
+  return (
+    <Layout>
+      <h1>Something went wrong, please refresh the page</h1>
+    </Layout>
+  );
 }
 
 type HeaderLinkProps = {

@@ -1,7 +1,13 @@
 import Head from "next/head";
 import Layout from "components/Layout";
+import QuizzCard from "components/QuizzCard";
+import prisma from "utils/prisma";
+import { InferGetStaticPropsType } from "next";
+import { useEffect } from "react";
 
-export default function Home() {
+export default function Quizzes({
+  quizzes,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout>
       <Head>
@@ -12,7 +18,33 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>Hi! Welcome to Interview PlayBook</h1>
+      <div className="w-4/5 min-h-[80vh]  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
+        <div className="relative -top-6">
+          <h2 className="text-4xl font-bold">Select Topic</h2>
+          <span className="text-gray-500 text-xl">Latest</span>
+        </div>
+        <div className="flex justify-center flex-wrap gap-8 max-sm:gap-4">
+          {quizzes.map((quizz) => (
+            <QuizzCard
+              key={quizz.id}
+              href={`/quizzes/${quizz.id}`}
+              title={quizz.name}
+              description={quizz.description}
+              src={quizz.icon}
+            />
+          ))}
+        </div>
+      </div>
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  const quizzes = await prisma.quizz.findMany();
+
+  return {
+    props: {
+      quizzes,
+    },
+  };
 }

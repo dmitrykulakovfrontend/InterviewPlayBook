@@ -37,44 +37,57 @@ export const appRouter = router({
     }),
   createQuizz: publicProcedure
     .input(QuizzSchema)
-    .mutation(async ({ input: {description, name, questions, icon}, ctx }) => {
-
-
-      const exists = await ctx.prisma.quizz.findFirst({
-        where: {
-          OR: [{ name }, { description }],
-        },
-      });
-
-      if (exists) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Same quizz already exists.",
+    .mutation(
+      async ({
+        input: { description, name, questions, icon },
+        ctx: { req, res, prisma },
+      }) => {
+        const exists = await prisma.quizz.findFirst({
+          where: {
+            OR: [{ name }, { description }],
+          },
         });
-      }
 
-      let iconUrl = await uploadImage(icon);
-      if (!iconUrl) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "We couldn't upload your image, please try again later.",
-        });
-      }
-
-      let result = await ctx.prisma.quizz.create({
-        data: {
-          name,
-          description,
-          questions: { create: questions },
-          icon: iconUrl,
+        if (exists) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Same quizz already exists.",
+          });
         }
-      });
-      return {
-        status: 201,
-        message: "Quizz created successfully",
-        result,
+
+        let iconUrl = await uploadImage(icon);
+        if (!iconUrl) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "We couldn't upload your image, please try again later.",
+          });
+        }
+
+        let result = await prisma.quizz.create({
+          data: {
+            name,
+            description,
+            questions: { create: questions },
+            icon: iconUrl,
+          },
+        });
+        console.log(1);
+        try {
+          await res.revalidate("/");
+          return {
+            status: 201,
+            message: "Quizz created successfully",
+            result,
+          };
+        } catch (err) {
+          console.error(err);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Revalidation error",
+          });
+        }
       }
-    }),
+    ),
 });
 
 // export type definition of API

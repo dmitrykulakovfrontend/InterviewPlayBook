@@ -4,7 +4,7 @@ import Link from "next/link";
 type QuizzCardProps = {
   title: string;
   description: string;
-  src: StaticImageData;
+  src: string;
   href: string;
 };
 
@@ -21,9 +21,11 @@ export default function QuizzCard({
           className="w-20 h-20 object-cover rounded-full border-2 border-indigo-500"
           src={src}
           alt={title}
+          width={80}
+          height={80}
         />
       </div>
-      <div>
+      <div className="w-10/12">
         <h2 className="text-gray-800 text-3xl font-semibold">{title}</h2>
         <p className="mt-2 text-gray-600">{description}</p>
       </div>
