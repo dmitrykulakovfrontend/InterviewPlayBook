@@ -20,6 +20,7 @@ import { trpc } from "utils/trpc";
 import { useRef } from "react";
 import getBase64 from "utils/getBase64";
 import Skeleton from "react-loading-skeleton";
+import { toast } from "react-toastify";
 
 export default function Admin({
   usersAmount,
@@ -56,19 +57,26 @@ export default function Admin({
   const onSubmit = async (data: Quizz) => {
     let base64Icon = await getBase64(data.icon[0]);
     const { description, questions, name } = data;
+
     createQuizz({
       name,
       description,
       questions,
       icon: base64Icon,
     });
-    return;
   };
-  const {
-    mutate: createQuizz,
-    isLoading,
-    isError,
-  } = trpc.createQuizz.useMutation();
+  const { mutate: createQuizz, isLoading } = trpc.createQuizz.useMutation({
+    onSuccess(data) {
+      toast(`Quizz ${data.result.name} created successfully!`, {
+        type: "success",
+      });
+    },
+    onError(error) {
+      toast(error.message, {
+        type: "error",
+      });
+    },
+  });
 
   if (status === "loading") {
     return (
@@ -144,6 +152,7 @@ export default function Admin({
         <Input
           name="name"
           type="text"
+          required
           register={register}
           placeholder="Quizz name"
           error={errors.name?.message}
@@ -153,6 +162,7 @@ export default function Admin({
         <Input
           name="description"
           textarea
+          required
           register={register}
           placeholder="Quizz description"
           label="Quizz description"
@@ -160,6 +170,7 @@ export default function Admin({
         />
         <Input
           type="file"
+          required
           accept=".png"
           name="icon"
           placeholder="Icon"
@@ -187,6 +198,7 @@ export default function Admin({
               <Input
                 name={`questions.${index}.text`}
                 register={register}
+                required
                 placeholder="Question"
                 error={
                   errors.questions && errors.questions[index]?.text?.message
@@ -198,6 +210,7 @@ export default function Admin({
                 name={`questions.${index}.answer`}
                 placeholder="Answer"
                 register={register}
+                required
                 label="Answer"
                 error={
                   errors.questions && errors.questions[index]?.answer?.message
@@ -208,21 +221,29 @@ export default function Admin({
           );
         })}
         <div className="flex gap-4 justify-around">
-          <button
-            type="submit"
-            className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-          >
-            <span className="inline-block mr-2">Create Quizz</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              append({ text: "", answer: "" });
-            }}
-            className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-          >
-            <span className="inline-block mr-2">Add Question</span>
-          </button>
+          {isLoading ? (
+            <button className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block">
+              Loading...
+            </button>
+          ) : (
+            <>
+              <button
+                type="submit"
+                className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+              >
+                <span className="inline-block mr-2">Create Quizz</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  append({ text: "", answer: "" });
+                }}
+                className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+              >
+                <span className="inline-block mr-2">Add Question</span>
+              </button>
+            </>
+          )}
         </div>
       </Form>
     </Layout>
