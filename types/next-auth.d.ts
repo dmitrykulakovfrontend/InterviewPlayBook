@@ -1,5 +1,5 @@
-import { JWT } from 'next-auth/jwt';
-import NextAuth, { DefaultSession } from "next-auth"
+import { JWT } from "next-auth/jwt";
+import NextAuth, { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   /**
@@ -8,9 +8,9 @@ declare module "next-auth" {
   interface Session {
     user: {
       role: string;
-    } & DefaultSession["user"]
+    } & DefaultSession["user"];
   }
-   /**
+  /**
    * The shape of the user object returned in the OAuth providers' `profile` callback,
    * or the second parameter of the `session` callback, when using a database.
    */

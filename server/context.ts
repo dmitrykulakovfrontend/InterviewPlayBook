@@ -6,7 +6,6 @@ import prisma from "utils/prisma";
 export async function createContext(ctx: trpcNext.CreateNextContextOptions) {
   const { req, res } = ctx;
 
-
   return {
     req,
     res,

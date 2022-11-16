@@ -21,7 +21,6 @@ import router from "next/router";
 
 async function submit(data: SignInType) {
   const { password, email } = data;
-  console.log(password);
   const response = await signIn("credentials", {
     redirect: false,
     password,

@@ -71,7 +71,7 @@ export const appRouter = router({
             icon: iconUrl,
           },
         });
-        console.log(1);
+
         try {
           await res.revalidate("/");
           return {
