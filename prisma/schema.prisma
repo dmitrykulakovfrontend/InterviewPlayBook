@@ -59,14 +59,19 @@ model VerificationToken {
 }
 
 model Quiz {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  name        String     @unique
-  description String
-  icon        String
-  rating      Float      @default(5.0)
-  timesPlayed Int        @default(0)
-  comments    Comment[]
-  questions   Question[]
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  name            String     @unique
+  description     String
+  mainDescription String
+  icon            String
+  rating          Float      @default(5.0)
+  timesPlayed     Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  likes           Int        @default(0)
+  dislikes        Int        @default(0)
+  comments        Comment[]
+  questions       Question[]
 }
 
 model Question {

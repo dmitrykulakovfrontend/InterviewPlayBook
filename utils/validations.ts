@@ -17,8 +17,9 @@ export const signUpSchema = signInSchema.extend({
 
 const MAX_FILE_SIZE = 500000;
 export const QuizSchema = z.object({
-  name: z.string().min(5).max(100),
-  description: z.string().min(10),
+  name: z.string().min(5).max(80),
+  description: z.string().min(10).max(200),
+  mainDescription: z.string().min(10),
   icon: z.any(),
   questions: z
     .object({

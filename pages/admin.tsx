@@ -56,12 +56,13 @@ export default function Admin({
 
   const onSubmit = async (data: Quiz) => {
     let base64Icon = await getBase64(data.icon[0]);
-    const { description, questions, name } = data;
+    const { description, questions, mainDescription, name } = data;
 
     createQuiz({
       name,
       description,
       questions,
+      mainDescription,
       icon: base64Icon,
     });
   };
@@ -167,6 +168,15 @@ export default function Admin({
           placeholder="Quiz description"
           label="Quiz description"
           error={errors.description?.message}
+        />
+        <Input
+          name="mainDescription"
+          textarea
+          required
+          register={register}
+          placeholder="Quiz info on it's page"
+          label="Quiz info on it's page"
+          error={errors.mainDescription?.message}
         />
         <Input
           type="file"
