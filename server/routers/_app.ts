@@ -39,7 +39,7 @@ export const appRouter = router({
     .input(QuizSchema)
     .mutation(
       async ({
-        input: { description, name, questions, icon },
+        input: { description, name, questions, icon, mainDescription },
         ctx: { req, res, prisma },
       }) => {
         const exists = await prisma.quiz.findFirst({
@@ -66,6 +66,7 @@ export const appRouter = router({
         let result = await prisma.quiz.create({
           data: {
             name,
+            mainDescription,
             description,
             questions: { create: questions },
             icon: iconUrl,

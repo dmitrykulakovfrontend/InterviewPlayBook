@@ -39,6 +39,7 @@ export default function Admin({
     defaultValues: {
       name: "Your quiz name",
       description: "Your quiz description",
+      mainDescription: "Quiz info on it's page",
       questions: [
         { text: "Question 1?", answer: "Answer 1" },
         { text: "Question 2?", answer: "Answer 2" },
@@ -70,6 +71,7 @@ export default function Admin({
     onSuccess(data) {
       toast(`Quiz ${data.result.name} created successfully!`, {
         type: "success",
+        autoClose: false,
       });
     },
     onError(error) {
