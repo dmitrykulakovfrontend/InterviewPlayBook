@@ -58,7 +58,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Quizz {
+model Quiz {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String     @unique
   description String
@@ -75,8 +75,8 @@ model Question {
   answer              String
   answeredCorrectly   Int    @default(0)
   answeredIncorrectly Int    @default(0)
-  Quizz               Quizz  @relation(fields: [QuizzId], references: [id])
-  QuizzId             String @db.ObjectId
+  Quiz                Quiz   @relation(fields: [QuizId], references: [id])
+  QuizId              String @db.ObjectId
 }
 
 model Comment {
@@ -89,6 +89,6 @@ model Comment {
   dislikes  Int      @default(0)
   User      User     @relation(fields: [userId], references: [id])
   userId    String   @db.ObjectId
-  Quizz     Quizz    @relation(fields: [quizzId], references: [id])
-  quizzId   String   @db.ObjectId
+  Quiz      Quiz     @relation(fields: [quizId], references: [id])
+  quizId    String   @db.ObjectId
 }

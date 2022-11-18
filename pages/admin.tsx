@@ -14,7 +14,7 @@ import Spinner from "components/Spinner";
 import { InferGetServerSidePropsType } from "next";
 import { useSession } from "next-auth/react";
 import prisma from "utils/prisma";
-import { Quizz, QuizzSchema } from "utils/validations";
+import { Quiz, QuizSchema } from "utils/validations";
 import { useForm, useFieldArray } from "react-hook-form";
 import { trpc } from "utils/trpc";
 import { useRef } from "react";
@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 export default function Admin({
   usersAmount,
   commentsAmount,
-  quizessAmount,
+  quizzessAmount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: session, status } = useSession();
 
@@ -34,11 +34,11 @@ export default function Admin({
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<Quizz>({
-    resolver: zodResolver(QuizzSchema),
+  } = useForm<Quiz>({
+    resolver: zodResolver(QuizSchema),
     defaultValues: {
-      name: "Your quizz name",
-      description: "Your quizz description",
+      name: "Your quiz name",
+      description: "Your quiz description",
       questions: [
         { text: "Question 1?", answer: "Answer 1" },
         { text: "Question 2?", answer: "Answer 2" },
@@ -54,20 +54,20 @@ export default function Admin({
     name: "questions",
   });
 
-  const onSubmit = async (data: Quizz) => {
+  const onSubmit = async (data: Quiz) => {
     let base64Icon = await getBase64(data.icon[0]);
     const { description, questions, name } = data;
 
-    createQuizz({
+    createQuiz({
       name,
       description,
       questions,
       icon: base64Icon,
     });
   };
-  const { mutate: createQuizz, isLoading } = trpc.createQuizz.useMutation({
+  const { mutate: createQuiz, isLoading } = trpc.createQuiz.useMutation({
     onSuccess(data) {
-      toast(`Quizz ${data.result.name} created successfully!`, {
+      toast(`Quiz ${data.result.name} created successfully!`, {
         type: "success",
       });
     },
@@ -136,13 +136,13 @@ export default function Admin({
             />
           </div>
           <div className="text-right ml-5">
-            <p className="text-2xl">{quizessAmount}</p>
-            <p>Quizess</p>
+            <p className="text-2xl">{quizzessAmount}</p>
+            <p>Quizzess</p>
           </div>
         </div>
       </div>
 
-      <h1 className="text-center text-2xl font-bold">Create quizz</h1>
+      <h1 className="text-center text-2xl font-bold">Create quiz</h1>
       <Form
         className="border w-2/3 m-auto"
         handleSubmit={handleSubmit}
@@ -154,24 +154,24 @@ export default function Admin({
           type="text"
           required
           register={register}
-          placeholder="Quizz name"
+          placeholder="Quiz name"
           error={errors.name?.message}
           autoFocus
-          label="Quizz name"
+          label="Quiz name"
         />
         <Input
           name="description"
           textarea
           required
           register={register}
-          placeholder="Quizz description"
-          label="Quizz description"
+          placeholder="Quiz description"
+          label="Quiz description"
           error={errors.description?.message}
         />
         <Input
           type="file"
           required
-          accept=".png"
+          accept="image/*"
           name="icon"
           placeholder="Icon"
           register={register}
@@ -180,7 +180,7 @@ export default function Admin({
         />
         {errors.questions?.message && (
           <span role="alert" className="text-red-400">
-            Quizz must contain atleast 5 questions
+            Quiz must contain atleast 5 questions
           </span>
         )}
         {fields.map((item, index) => {
@@ -231,7 +231,7 @@ export default function Admin({
                 type="submit"
                 className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
               >
-                <span className="inline-block mr-2">Create Quizz</span>
+                <span className="inline-block mr-2">Create Quiz</span>
               </button>
               <button
                 type="button"
@@ -251,16 +251,16 @@ export default function Admin({
 }
 
 export async function getServerSideProps() {
-  const [usersAmount, commentsAmount, quizessAmount] = await Promise.all([
+  const [usersAmount, commentsAmount, quizzessAmount] = await Promise.all([
     prisma.user.count(),
     prisma.comment.count(),
-    prisma.quizz.count(),
+    prisma.quiz.count(),
   ]);
   return {
     props: {
       usersAmount,
       commentsAmount,
-      quizessAmount,
+      quizzessAmount,
     },
   };
 }

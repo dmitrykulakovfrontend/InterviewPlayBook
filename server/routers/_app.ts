@@ -1,5 +1,5 @@
 import { publicProcedure, router } from "../trpc";
-import { QuizzSchema, signUpSchema } from "../../utils/validations";
+import { QuizSchema, signUpSchema } from "../../utils/validations";
 import { TRPCError } from "@trpc/server";
 import { hash } from "bcrypt";
 import { uploadImage } from "utils/cloudinary";
@@ -35,14 +35,14 @@ export const appRouter = router({
         result: result.email,
       };
     }),
-  createQuizz: publicProcedure
-    .input(QuizzSchema)
+  createQuiz: publicProcedure
+    .input(QuizSchema)
     .mutation(
       async ({
         input: { description, name, questions, icon },
         ctx: { req, res, prisma },
       }) => {
-        const exists = await prisma.quizz.findFirst({
+        const exists = await prisma.quiz.findFirst({
           where: {
             OR: [{ name }, { description }],
           },
@@ -51,7 +51,7 @@ export const appRouter = router({
         if (exists) {
           throw new TRPCError({
             code: "CONFLICT",
-            message: "Same quizz already exists.",
+            message: "Same quiz already exists.",
           });
         }
 
@@ -63,7 +63,7 @@ export const appRouter = router({
           });
         }
 
-        let result = await prisma.quizz.create({
+        let result = await prisma.quiz.create({
           data: {
             name,
             description,
@@ -76,7 +76,7 @@ export const appRouter = router({
           await res.revalidate("/");
           return {
             status: 201,
-            message: "Quizz created successfully",
+            message: "Quiz created successfully",
             result,
           };
         } catch (err) {

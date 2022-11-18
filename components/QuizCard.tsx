@@ -1,26 +1,26 @@
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 
-type QuizzCardProps = {
+type QuizCardProps = {
   title: string;
   description: string;
   src: string;
   href: string;
 };
 
-export default function QuizzCard({
+export default function QuizCard({
   title,
   description,
   src,
   href,
-}: QuizzCardProps) {
+}: QuizCardProps) {
   return (
-    <div className="max-w-md flex-1 basis-72 relative py-4 px-8 bg-white shadow-lg rounded-lg">
+    <div className="max-w-md flex-1 basis-72 flex flex-col justify-between relative py-4 px-8 bg-white shadow-lg rounded-lg">
       <div className="absolute -top-5 right-0">
         <Image
           className="w-20 h-20 object-cover rounded-full border-2 border-indigo-500"
           src={src}
-          alt={title}
+          alt="Quiz icon"
           width={80}
           height={80}
         />

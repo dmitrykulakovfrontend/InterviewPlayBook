@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Layout from "components/Layout";
-import QuizzCard from "components/QuizzCard";
+import QuizCard from "components/QuizCard";
 import prisma from "utils/prisma";
 import { InferGetStaticPropsType } from "next";
 import { useEffect } from "react";
@@ -24,13 +24,13 @@ export default function Quizzes({
           <span className="text-gray-500 text-xl">Latest</span>
         </div>
         <div className="flex justify-center flex-wrap gap-8 max-sm:gap-4">
-          {quizzes.map((quizz) => (
-            <QuizzCard
-              key={quizz.id}
-              href={`/quizzes/${quizz.id}`}
-              title={quizz.name}
-              description={quizz.description}
-              src={quizz.icon}
+          {quizzes.map((quiz) => (
+            <QuizCard
+              key={quiz.id}
+              href={`/quizzes/${quiz.id}`}
+              title={quiz.name}
+              description={quiz.description}
+              src={quiz.icon}
             />
           ))}
         </div>
@@ -40,7 +40,7 @@ export default function Quizzes({
 }
 
 export async function getStaticProps() {
-  const quizzes = await prisma.quizz.findMany();
+  const quizzes = await prisma.quiz.findMany();
 
   return {
     props: {

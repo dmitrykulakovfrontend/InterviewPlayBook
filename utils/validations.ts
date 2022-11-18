@@ -16,8 +16,8 @@ export const signUpSchema = signInSchema.extend({
 });
 
 const MAX_FILE_SIZE = 500000;
-export const QuizzSchema = z.object({
-  name: z.string().min(5).max(40),
+export const QuizSchema = z.object({
+  name: z.string().min(5).max(100),
   description: z.string().min(10),
   icon: z.any(),
   questions: z
@@ -29,9 +29,9 @@ export const QuizzSchema = z.object({
       answer: z.string().min(5),
     })
     .array()
-    .min(5, { message: "Quizz must contain atleast 5 questions" }),
+    .min(5, { message: "Quiz must contain atleast 5 questions" }),
 });
 
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;
-export type Quizz = z.infer<typeof QuizzSchema>;
+export type Quiz = z.infer<typeof QuizSchema>;
