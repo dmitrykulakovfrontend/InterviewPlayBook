@@ -29,10 +29,10 @@ export default function QuizCard({
         <h2 className="text-gray-800 text-3xl font-semibold">{title}</h2>
         <p className="mt-2 text-gray-600">{description}</p>
       </div>
-      <div className="flex justify-between mt-4">
+      <div className="flex items-center justify-between mt-4 max-lg:flex-col">
         <Link
           href={href}
-          className="text-xl font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
+          className="text-xl w-fit font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
         >
           Open
         </Link>
