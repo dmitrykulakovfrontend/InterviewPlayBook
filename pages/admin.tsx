@@ -41,11 +41,16 @@ export default function Admin({
       description: "Your quiz description",
       mainDescription: "Quiz info on it's page",
       questions: [
-        { text: "Question 1?", answer: "Answer 1" },
-        { text: "Question 2?", answer: "Answer 2" },
-        { text: "Question 3?", answer: "Answer 3" },
-        { text: "Question 4?", answer: "Answer 4" },
-        { text: "Question 5?", answer: "Answer 5" },
+        {
+          text: "Question 1?",
+          answer: "Answer 1",
+          choices: ["Choice 1", "Choice 2", "Choice 3"],
+        },
+        {
+          text: "Question 2?",
+          answer: "Answer 2",
+          choices: ["Choice 1", "Choice 2", "Choice 3"],
+        },
       ],
     },
   });
@@ -197,7 +202,7 @@ export default function Admin({
         )}
         {fields.map((item, index) => {
           return (
-            <div className="w-full" key={item.id}>
+            <div className="w-full flex flex-col gap-4" key={item.id}>
               <div className="mb-1 w-full flex gap-4 items-center justify-end">
                 <h3>Question {index + 1}</h3>
                 <button
@@ -216,7 +221,6 @@ export default function Admin({
                   errors.questions && errors.questions[index]?.text?.message
                 }
                 label="Question"
-                textarea
               />
               <Input
                 name={`questions.${index}.answer`}
@@ -227,8 +231,21 @@ export default function Admin({
                 error={
                   errors.questions && errors.questions[index]?.answer?.message
                 }
-                textarea
               />
+              {item.choices.map((choice, choiceIndex) => (
+                <Input
+                  key={choice}
+                  name={`questions.${index}.choices.${choiceIndex}`}
+                  placeholder={`Choice ${choiceIndex + 1}`}
+                  register={register}
+                  required
+                  label={`Choice ${choiceIndex + 1}`}
+                  error={
+                    errors.questions &&
+                    errors.questions[index]?.choices?.message
+                  }
+                />
+              ))}
             </div>
           );
         })}
@@ -248,7 +265,7 @@ export default function Admin({
               <button
                 type="button"
                 onClick={() => {
-                  append({ text: "", answer: "" });
+                  append({ text: "", answer: "", choices: ["", "", "", ""] });
                 }}
                 className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
               >

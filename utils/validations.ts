@@ -27,10 +27,11 @@ export const QuizSchema = z.object({
         .string()
         .min(5)
         .endsWith("?", { message: "Question must end with question mark" }),
-      answer: z.string().min(5),
+      answer: z.string(),
+      choices: z.string().array(),
     })
     .array()
-    .min(5, { message: "Quiz must contain atleast 5 questions" }),
+    .min(2, { message: "Quiz must contain atleast 2 questions" }),
 });
 
 export type SignIn = z.infer<typeof signInSchema>;

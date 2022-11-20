@@ -75,13 +75,14 @@ model Quiz {
 }
 
 model Question {
-  id                  String @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
   text                String
   answer              String
-  answeredCorrectly   Int    @default(0)
-  answeredIncorrectly Int    @default(0)
-  Quiz                Quiz   @relation(fields: [QuizId], references: [id])
-  QuizId              String @db.ObjectId
+  choices             String[]
+  answeredCorrectly   Int      @default(0)
+  answeredIncorrectly Int      @default(0)
+  Quiz                Quiz     @relation(fields: [QuizId], references: [id])
+  QuizId              String   @db.ObjectId
 }
 
 model Comment {
