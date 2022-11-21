@@ -15,9 +15,9 @@ export default function Quiz({
         <title>{quiz.name}</title>
         <meta name="description" content={quiz.description} />
       </Head>
-      <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
+      <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12  max-lg:items-center">
         <h2 className="text-4xl font-bold">{quiz.name}</h2>
-        <div className="flex justify-start gap-12 ">
+        <div className="flex justify-start gap-12 max-lg:flex-col">
           <Image
             src={quiz.icon}
             className="shadow-xl"
@@ -44,9 +44,11 @@ export default function Quiz({
           </div>
         </div>
         <h2 className="text-2xl font-bold">Description:</h2>
-        <p className="text-lg whitespace-pre-wrap">{quiz.mainDescription}</p>
+        <p className="text-lg whitespace-pre-wrap  text-center">
+          {quiz.mainDescription}
+        </p>
         <Link
-          href={"/"}
+          href={`/quizzes/play/${quiz.id}`}
           className="text-xl w-fit font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
         >
           Start
@@ -64,7 +66,6 @@ export async function getStaticPaths() {
       },
     };
   });
-  console.log(paths);
   return {
     paths,
     fallback: "blocking",

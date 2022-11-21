@@ -1,5 +1,5 @@
 import { publicProcedure, router } from "../trpc";
-import { QuizSchema, signUpSchema } from "../../utils/validations";
+import { QuizSchema, signUpSchema, userResultsSchema } from "utils/validations";
 import { TRPCError } from "@trpc/server";
 import { hash } from "bcrypt";
 import { uploadImage } from "utils/cloudinary";
@@ -89,6 +89,40 @@ export const appRouter = router({
         }
       }
     ),
+  completeQuiz: publicProcedure
+    .input(userResultsSchema)
+    .mutation(async ({ input, ctx }) => {
+      let promises = [];
+      promises.push(
+        ctx.prisma.quiz.update({
+          where: {
+            id: input.quizId,
+          },
+          data: {
+            timesPlayed: {
+              increment: 1,
+            },
+          },
+        })
+      );
+      for (let question of input.results) {
+        console.log(question);
+        promises.push(
+          ctx.prisma.question.update({
+            where: {
+              id: question.id,
+            },
+            data: {
+              [question.correct ? "answeredCorrectly" : "answeredIncorrectly"]:
+                {
+                  increment: 1,
+                },
+            },
+          })
+        );
+      }
+      await Promise.all(promises);
+    }),
 });
 
 // export type definition of API

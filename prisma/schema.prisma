@@ -64,8 +64,7 @@ model Quiz {
   description     String
   mainDescription String
   icon            String
-  rating          Float      @default(5.0)
-  timesPlayed     Int        @default(0)
+  timesPlayed     Int        @default(1)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   likes           Int        @default(0)
@@ -79,10 +78,10 @@ model Question {
   text                String
   answer              String
   choices             String[]
-  answeredCorrectly   Int      @default(0)
-  answeredIncorrectly Int      @default(0)
-  Quiz                Quiz     @relation(fields: [QuizId], references: [id])
-  QuizId              String   @db.ObjectId
+  answeredCorrectly   Int      @default(1)
+  answeredIncorrectly Int      @default(1)
+  quiz                Quiz     @relation(fields: [quizId], references: [id])
+  quizId              String   @db.ObjectId
 }
 
 model Comment {
@@ -93,8 +92,8 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   dislikes  Int      @default(0)
-  User      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.ObjectId
-  Quiz      Quiz     @relation(fields: [quizId], references: [id])
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
   quizId    String   @db.ObjectId
 }

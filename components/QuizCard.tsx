@@ -36,12 +36,6 @@ export default function QuizCard({
         >
           Open
         </Link>
-        <Link
-          href="stats"
-          className="text-xl font-medium text-indigo-500  py-2 px-4 rounded-md"
-        >
-          Your result: <span className="text-red-300">50%</span>
-        </Link>
       </div>
     </div>
   );
