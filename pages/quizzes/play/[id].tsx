@@ -26,24 +26,25 @@ export default function QuizPlay({
   const [results, setResults] = useState<Results>([]);
   const [questionChoices, setQuestionChoices] = useState<string[]>([]);
 
-  if (!questions) return <NotFound />;
-  const { answer, text, choices, id } = questions[currentQuestionIndex];
+  const question = questions[currentQuestionIndex];
 
   useEffect(() => {
-    setQuestionChoices(shuffleArray([...choices, answer]));
-  }, [answer, choices]);
+    if (!question) return;
+    setQuestionChoices(shuffleArray([...question.choices, question.answer]));
+  }, [question]);
 
   const { mutate: completeQuiz } = trpc.completeQuiz.useMutation();
 
   const nextQuestion = () => {
     let userAnswer = questionChoices[selectedQuestion];
-    if (userAnswer === answer) {
+    let isCorrect = userAnswer === question.answer;
+    if (isCorrect) {
       setResults([
         ...results,
         {
           correct: true,
           userAnswer,
-          id,
+          id: question.id,
         },
       ]);
     } else {
@@ -52,17 +53,18 @@ export default function QuizPlay({
         {
           correct: false,
           userAnswer,
-          id,
+          id: question.id,
         },
       ]);
     }
-    if (currentQuestionIndex + 1 >= questions.length) {
+    let isFinalQuestion = currentQuestionIndex + 1 >= questions.length;
+    if (isFinalQuestion) {
       setIsFinished(true);
       completeQuiz({ results, quizId: questions[0].quizId });
-      return;
+    } else {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setSelectedQuestion(-1);
     }
-    setCurrentQuestionIndex((prev) => prev + 1);
-    setSelectedQuestion(-1);
   };
 
   function shuffleArray(array: string[]) {
@@ -72,6 +74,8 @@ export default function QuizPlay({
     }
     return array;
   }
+
+  if (!question) return <NotFound />;
 
   if (isFinished)
     return (
@@ -100,7 +104,7 @@ export default function QuizPlay({
           />
         </Head>
         <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col justify-center items-center gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
-          <h2 className="text-4xl font-bold">{text}</h2>
+          <h2 className="text-4xl font-bold">{question.text}</h2>
           <div className="flex flex-wrap border gap-4 p-4 w-4/5 rounded-xl  shadow-lg">
             {results.map((result, i) => (
               <div
@@ -144,11 +148,11 @@ export default function QuizPlay({
         <title>
           {`${currentQuestionIndex + 1} / ${questions.length} Questions`}
         </title>
-        <meta name="description" content={text} />
+        <meta name="description" content={question.text} />
       </Head>
       <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
         <h2 className="text-4xl  w-4/5 text-center font-bold break-words max-md:text-xl">
-          {text}
+          {question.text}
         </h2>
         <div className="flex flex-wrap border  rounded-lg gap-4 p-4 w-4/5  shadow-lg">
           {questionChoices.map((text, i) => (
@@ -194,7 +198,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 };
 
 export const getStaticProps: GetStaticProps<
-  { questions?: Question[] | null | undefined },
+  { questions: Question[] },
   Params
 > = async ({ params }) => {
   let questions;
@@ -208,7 +212,7 @@ export const getStaticProps: GetStaticProps<
     console.error(error);
     return {
       props: {
-        quiz: null,
+        questions: -1,
       },
     };
   }
