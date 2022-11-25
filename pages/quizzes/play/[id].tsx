@@ -3,11 +3,13 @@ import Layout from "components/Layout";
 import Router, { useRouter } from "next/router";
 import Image from "next/image";
 import prisma from "utils/prisma";
-import { InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
 import NotFound from "pages/404";
+import { ParsedUrlQuery } from "querystring";
+import { Question } from "@prisma/client";
 
 type Results = {
   correct: boolean;
@@ -24,14 +26,13 @@ export default function QuizPlay({
   const [results, setResults] = useState<Results>([]);
 
   if (!questions) return <NotFound />;
-
   const { answer, text, choices, id } = questions[currentQuestionIndex];
 
   const questionChoices = [...choices, answer];
 
   const { mutate: completeQuiz } = trpc.completeQuiz.useMutation();
 
-  function nextQuestion() {
+  const nextQuestion = () => {
     let userAnswer = questionChoices[selectedQuestion];
     if (userAnswer === answer) {
       setResults([
@@ -59,7 +60,7 @@ export default function QuizPlay({
     }
     setCurrentQuestionIndex((prev) => prev + 1);
     setSelectedQuestion(-1);
-  }
+  };
 
   if (isFinished)
     return (
@@ -162,7 +163,11 @@ export default function QuizPlay({
   );
 }
 
-export async function getStaticPaths() {
+interface Params extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const quizzes = await prisma.quiz.findMany();
   const paths = quizzes.map(({ id }) => {
     return {
@@ -175,14 +180,17 @@ export async function getStaticPaths() {
     paths,
     fallback: "blocking",
   };
-}
+};
 
-export async function getStaticProps({ params: { id } }: any) {
+export const getStaticProps: GetStaticProps<
+  { questions?: Question[] | null | undefined },
+  Params
+> = async ({ params }) => {
   let questions;
   try {
     questions = await prisma.question.findMany({
       where: {
-        quizId: id,
+        quizId: params?.id,
       },
     });
   } catch (error) {
@@ -201,4 +209,4 @@ export async function getStaticProps({ params: { id } }: any) {
       questions,
     },
   };
-}
+};

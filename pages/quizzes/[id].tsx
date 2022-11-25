@@ -3,11 +3,13 @@ import Layout from "components/Layout";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import prisma from "utils/prisma";
-import { InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import NotFound from "pages/404";
+import { ParsedUrlQuery } from "querystring";
+import { Question, Quiz } from "@prisma/client";
 
-export default function Quiz({
+export default function QuizPage({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   if (!quiz) return <NotFound />;
@@ -66,7 +68,11 @@ export default function Quiz({
     </Layout>
   );
 }
-export async function getStaticPaths() {
+interface Params extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const quizzes = await prisma.quiz.findMany();
   const paths = quizzes.map(({ id }) => {
     return {
@@ -79,13 +85,15 @@ export async function getStaticPaths() {
     paths,
     fallback: "blocking",
   };
-}
+};
 
-export async function getStaticProps({ params: { id } }: any) {
+export const getStaticProps: GetStaticProps<{ quiz: Quiz }, Params> = async ({
+  params,
+}) => {
   let quiz;
   try {
     quiz = await prisma.quiz.findFirstOrThrow({
-      where: { id },
+      where: { id: params?.id },
     });
   } catch (error) {
     console.error(error);
@@ -103,4 +111,4 @@ export async function getStaticProps({ params: { id } }: any) {
       quiz,
     },
   };
-}
+};
