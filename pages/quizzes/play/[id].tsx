@@ -24,11 +24,14 @@ export default function QuizPlay({
   const [isFinished, setIsFinished] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(-1);
   const [results, setResults] = useState<Results>([]);
+  const [questionChoices, setQuestionChoices] = useState<string[]>([]);
 
   if (!questions) return <NotFound />;
   const { answer, text, choices, id } = questions[currentQuestionIndex];
 
-  const questionChoices = [...choices, answer];
+  useEffect(() => {
+    setQuestionChoices(shuffleArray([...choices, answer]));
+  }, [answer, choices]);
 
   const { mutate: completeQuiz } = trpc.completeQuiz.useMutation();
 
@@ -61,6 +64,14 @@ export default function QuizPlay({
     setCurrentQuestionIndex((prev) => prev + 1);
     setSelectedQuestion(-1);
   };
+
+  function shuffleArray(array: string[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
   if (isFinished)
     return (

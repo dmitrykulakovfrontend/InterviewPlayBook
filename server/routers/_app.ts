@@ -106,7 +106,6 @@ export const appRouter = router({
         })
       );
       for (let question of input.results) {
-        console.log(question);
         promises.push(
           ctx.prisma.question.update({
             where: {
