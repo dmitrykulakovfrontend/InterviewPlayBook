@@ -1,13 +1,10 @@
 import Head from "next/head";
 import Layout from "components/Layout";
-import Router, { useRouter } from "next/router";
-import Image from "next/image";
 import prisma from "utils/prisma";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
-import NotFound from "pages/404";
 import { ParsedUrlQuery } from "querystring";
 import { Question } from "@prisma/client";
 
@@ -29,7 +26,6 @@ export default function QuizPlay({
   const question = questions[currentQuestionIndex];
 
   useEffect(() => {
-    if (!question) return;
     setQuestionChoices(shuffleArray([...question.choices, question.answer]));
   }, [question]);
 
@@ -74,8 +70,6 @@ export default function QuizPlay({
     }
     return array;
   }
-
-  if (!question) return <NotFound />;
 
   if (isFinished)
     return (
@@ -211,9 +205,7 @@ export const getStaticProps: GetStaticProps<
   } catch (error) {
     console.error(error);
     return {
-      props: {
-        questions: -1,
-      },
+      notFound: true,
     };
   }
 

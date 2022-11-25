@@ -1,18 +1,15 @@
 import Head from "next/head";
 import Layout from "components/Layout";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import prisma from "utils/prisma";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
-import NotFound from "pages/404";
 import { ParsedUrlQuery } from "querystring";
-import { Question, Quiz } from "@prisma/client";
+import { Quiz } from "@prisma/client";
 
 export default function QuizPage({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  if (!quiz) return <NotFound />;
   return (
     <Layout>
       <Head>
@@ -98,9 +95,7 @@ export const getStaticProps: GetStaticProps<{ quiz: Quiz }, Params> = async ({
   } catch (error) {
     console.error(error);
     return {
-      props: {
-        quiz: null,
-      },
+      notFound: true,
     };
   }
 
