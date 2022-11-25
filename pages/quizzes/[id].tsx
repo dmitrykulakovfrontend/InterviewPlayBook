@@ -5,10 +5,12 @@ import Image from "next/image";
 import prisma from "utils/prisma";
 import { InferGetStaticPropsType } from "next";
 import Link from "next/link";
+import NotFound from "pages/404";
 
 export default function Quiz({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  if (!quiz) return <NotFound />;
   return (
     <Layout>
       <Head>
@@ -80,9 +82,19 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { id } }: any) {
-  let quiz = await prisma.quiz.findFirstOrThrow({
-    where: { id },
-  });
+  let quiz;
+  try {
+    quiz = await prisma.quiz.findFirstOrThrow({
+      where: { id },
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        quiz: null,
+      },
+    };
+  }
 
   // fixes problem with not serializable Date object
   quiz = JSON.parse(JSON.stringify(quiz));

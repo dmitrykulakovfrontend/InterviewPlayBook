@@ -7,6 +7,7 @@ import { InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { trpc } from "utils/trpc";
+import NotFound from "pages/404";
 
 type Results = {
   correct: boolean;
@@ -20,8 +21,11 @@ export default function QuizPlay({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(-1);
-  const { answer, text, choices, id } = questions[currentQuestionIndex];
   const [results, setResults] = useState<Results>([]);
+
+  if (!questions) return <NotFound />;
+
+  const { answer, text, choices, id } = questions[currentQuestionIndex];
 
   const questionChoices = [...choices, answer];
 
@@ -174,11 +178,21 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { id } }: any) {
-  let questions = await prisma.question.findMany({
-    where: {
-      quizId: id,
-    },
-  });
+  let questions;
+  try {
+    questions = await prisma.question.findMany({
+      where: {
+        quizId: id,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        quiz: null,
+      },
+    };
+  }
 
   // fixes problem with not serializable Date object
   questions = JSON.parse(JSON.stringify(questions));
