@@ -50,6 +50,7 @@ export default function QuizPlay({
     }
     if (currentQuestionIndex + 1 >= questions.length) {
       setIsFinished(true);
+      completeQuiz({ results, quizId: questions[0].quizId });
       return;
     }
     setCurrentQuestionIndex((prev) => prev + 1);
@@ -60,7 +61,27 @@ export default function QuizPlay({
     return (
       <Layout>
         <Head>
-          <title>Results</title>
+          <title>Interview PlayBook</title>
+          <meta
+            name="description"
+            content="Web application to improve your answers in interviews by completing quizzes!"
+          />
+          <link
+            rel="icon"
+            href="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+          />
+          <meta property="og:title" content="Interview PlayBook" />
+          <meta property="og:description" content="" />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+          />
+          <meta name="twitter:card" content="summary" />
+          <meta
+            name="twitter:image"
+            content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+          />
         </Head>
         <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col justify-center items-center gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
           <h2 className="text-4xl font-bold">{text}</h2>
@@ -92,9 +113,6 @@ export default function QuizPlay({
             </p>
           </div>
           <Link
-            onClick={() =>
-              completeQuiz({ results, quizId: questions[0].quizId })
-            }
             href={"/"}
             className="text-xl w-fit font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
           >

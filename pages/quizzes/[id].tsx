@@ -14,6 +14,13 @@ export default function Quiz({
       <Head>
         <title>{quiz.name}</title>
         <meta name="description" content={quiz.description} />
+        <link rel="icon" href={quiz.icon} />
+        <meta property="og:title" content={quiz.name} />
+        <meta property="og:description" content="" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={quiz.icon} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:image" content={quiz.icon} />
       </Head>
       <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12  max-lg:items-center">
         <h2 className="text-4xl font-bold">{quiz.name}</h2>

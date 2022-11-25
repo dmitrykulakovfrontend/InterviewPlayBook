@@ -15,9 +15,24 @@ export default function Quizzes({
         <title>Interview PlayBook</title>
         <meta
           name="description"
-          content="Next-gen web application to improve your answers in interviews!"
+          content="Web application to improve your answers in interviews by completing quizzes!"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          href="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+        />
+        <meta property="og:title" content="Interview PlayBook" />
+        <meta property="og:description" content="" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          name="twitter:image"
+          content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+        />
       </Head>
       <div className="w-4/5 min-h-[80vh]   border-t border-gray-200 shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
         <h2 className="text-4xl font-bold">Select Topic</h2>

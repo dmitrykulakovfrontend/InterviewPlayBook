@@ -47,9 +47,24 @@ export default function SignIn() {
         <title>Interview PlayBook</title>
         <meta
           name="description"
-          content="Next-gen web application to improve your answers in interviews!"
+          content="Web application to improve your answers in interviews by completing quizzes!"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          href="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+        />
+        <meta property="og:title" content="Interview PlayBook" />
+        <meta property="og:description" content="" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          name="twitter:image"
+          content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
+        />
       </Head>
       <div className="xs:p-0 md:max-w-md">
         <Link
