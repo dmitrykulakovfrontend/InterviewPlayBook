@@ -38,9 +38,7 @@ async function submit(data: SignInType) {
   router.push("/");
 }
 
-export default function SignIn({
-  providers,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn() {
   const {
     register,
     handleSubmit,
@@ -113,19 +111,20 @@ export default function SignIn({
           </Form>
           <div className="p-5">
             <div className="flex flex-wrap w-full gap-1">
-              {providers &&
-                Object.values(providers)
-                  .filter((provider) => provider.type !== "credentials")
-                  .map((provider) => (
-                    <button
-                      key={provider.name}
-                      onClick={() => signIn(provider.id, { callbackUrl: "/" })}
-                      type="button"
-                      className="transition flex-1 duration-200 border border-gray-200 text-gray-500 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-normal text-center inline-block"
-                    >
-                      {provider.name}
-                    </button>
-                  ))}
+              <button
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+                type="button"
+                className="transition flex-1 duration-200 border border-gray-200 text-gray-500 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-normal text-center inline-block"
+              >
+                Google
+              </button>
+              <button
+                onClick={() => signIn("github", { callbackUrl: "/" })}
+                type="button"
+                className="transition flex-1 duration-200 border border-gray-200 text-gray-500 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-normal text-center inline-block"
+              >
+                Github
+              </button>
             </div>
           </div>
           <div className="py-5">
@@ -154,11 +153,4 @@ export default function SignIn({
       </div>
     </Layout>
   );
-}
-
-export async function getServerSideProps() {
-  const providers = await getProviders();
-  return {
-    props: { providers },
-  };
 }
