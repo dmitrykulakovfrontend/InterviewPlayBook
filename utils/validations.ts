@@ -15,7 +15,7 @@ export const signUpSchema = signInSchema.extend({
     .max(15, { message: "Name maximum length is 60" }),
 });
 
-export const QuizSchema = z.object({
+export const quizSchema = z.object({
   name: z.string().min(5).max(80),
   description: z.string().min(10).max(200),
   mainDescription: z.string().min(10),
@@ -33,6 +33,11 @@ export const QuizSchema = z.object({
     .min(2, { message: "Quiz must contain atleast 2 questions" }),
 });
 
+export const updateQuizSchema = quizSchema.extend({
+  oldIcon: z.string(),
+  quizId: z.string(),
+});
+
 export const userResultsSchema = z.object({
   results: z
     .object({
@@ -46,5 +51,6 @@ export const userResultsSchema = z.object({
 
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;
-export type Quiz = z.infer<typeof QuizSchema>;
+export type Quiz = z.infer<typeof quizSchema>;
+export type UpdateQuiz = z.infer<typeof updateQuizSchema>;
 export type userResults = z.infer<typeof userResultsSchema>;

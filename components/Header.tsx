@@ -17,9 +17,9 @@ export default function Header() {
 
   if (status === "loading")
     return (
-      <div className="bg-white w-screen shadow-md sticky z-50 top-0 border py-3 px-6">
+      <div className="bg-white w-screen shadow-md fixed z-40 top-0 border py-3 px-6">
         <div className="flex justify-between">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center relative z-[99]">
             <Image
               src={logoIcon}
               className="h-10 w-10 text-gray-500"
@@ -60,7 +60,7 @@ export default function Header() {
 
   if (status === "unauthenticated")
     return (
-      <div className="bg-white w-screen shadow-md sticky z-50 top-0 border py-3 px-6">
+      <div className="bg-white w-screen shadow-md fixed z-50 top-0 border py-3 px-6">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center">
             <Image
@@ -98,7 +98,7 @@ export default function Header() {
 
   if (status === "authenticated")
     return (
-      <div className="bg-white w-screen shadow-md sticky z-50 top-0 border py-3 px-6">
+      <div className="bg-white w-screen shadow-md fixed z-50 top-0 border py-3 px-6">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center">
             <Image

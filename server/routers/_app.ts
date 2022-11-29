@@ -1,8 +1,10 @@
 import { publicProcedure, router } from "../trpc";
-import { QuizSchema, signUpSchema, userResultsSchema } from "utils/validations";
+import { quizSchema, signUpSchema, userResultsSchema } from "utils/validations";
 import { TRPCError } from "@trpc/server";
 import { hash } from "bcrypt";
 import { uploadImage } from "utils/cloudinary";
+import { updateQuizSchema } from "../../utils/validations";
+import { z } from "zod";
 
 export const appRouter = router({
   signUp: publicProcedure
@@ -36,7 +38,7 @@ export const appRouter = router({
       };
     }),
   createQuiz: publicProcedure
-    .input(QuizSchema)
+    .input(quizSchema)
     .mutation(
       async ({
         input: { description, name, questions, icon, mainDescription },
@@ -89,6 +91,92 @@ export const appRouter = router({
         }
       }
     ),
+  updateQuiz: publicProcedure
+    .input(updateQuizSchema)
+    .mutation(
+      async ({
+        input: {
+          description,
+          name,
+          questions,
+          icon,
+          mainDescription,
+          oldIcon,
+          quizId,
+        },
+        ctx: { req, res, prisma },
+      }) => {
+        // get image id from url to cloudinary image
+        let publicImageId = oldIcon.slice(
+          oldIcon.lastIndexOf("/") + 1,
+          oldIcon.lastIndexOf(".")
+        );
+        let iconUrl = await uploadImage(icon, publicImageId);
+        if (!iconUrl) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "We couldn't upload your image, please try again later.",
+          });
+        }
+
+        let result = await prisma.quiz.update({
+          where: { id: quizId },
+          data: {
+            name,
+            mainDescription,
+            description,
+            questions: {
+              deleteMany: {},
+              createMany: { data: questions },
+            },
+            icon: iconUrl,
+          },
+        });
+
+        try {
+          await Promise.allSettled([
+            res.revalidate("/"),
+            res.revalidate(`/quizzes/${result.id}`),
+            res.revalidate(`/quizzes/play/${result.id}`),
+          ]);
+
+          return {
+            status: 201,
+            message: "Quiz created successfully",
+            result,
+          };
+        } catch (err) {
+          console.error(err);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Revalidation error",
+          });
+        }
+      }
+    ),
+  deleteQuiz: publicProcedure
+    .input(z.string())
+    .mutation(async ({ input: id, ctx: { req, res, prisma } }) => {
+      let result = await prisma.quiz.delete({
+        where: { id },
+      });
+
+      try {
+        await res.revalidate("/");
+
+        return {
+          status: 201,
+          message: "Quiz deleted successfully",
+          result,
+        };
+      } catch (err) {
+        console.error(err);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Revalidation error",
+        });
+      }
+    }),
   completeQuiz: publicProcedure
     .input(userResultsSchema)
     .mutation(async ({ input, ctx }) => {

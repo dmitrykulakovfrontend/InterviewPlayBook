@@ -8,10 +8,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-export async function uploadImage(imagePath: any) {
+export async function uploadImage(imagePath: string, imageId?: string) {
   const options: UploadApiOptions = {
     unique_filename: true,
-    folder: "IPB/icons",
+    folder: "IPB/QuizIcons",
+    public_id: imageId,
   };
 
   try {

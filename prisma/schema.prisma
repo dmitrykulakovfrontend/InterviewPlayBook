@@ -80,7 +80,7 @@ model Question {
   choices             String[]
   answeredCorrectly   Int      @default(1)
   answeredIncorrectly Int      @default(1)
-  quiz                Quiz     @relation(fields: [quizId], references: [id])
+  quiz                Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId              String   @db.ObjectId
 }
 
@@ -92,8 +92,8 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   dislikes  Int      @default(0)
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @db.ObjectId
-  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   quizId    String   @db.ObjectId
 }
