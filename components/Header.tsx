@@ -13,8 +13,6 @@ import Layout from "./Layout";
 
 export default function Header() {
   const { data: session, status } = useSession();
-  console.log({ session });
-
   if (status === "loading")
     return (
       <div className="bg-white w-screen shadow-md fixed z-40 top-0 border py-3 px-6">

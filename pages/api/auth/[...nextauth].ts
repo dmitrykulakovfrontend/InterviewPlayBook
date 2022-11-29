@@ -54,10 +54,8 @@ export const authOptions: NextAuthOptions = {
           credentials.password,
           user.password
         );
-        console.log({ validPassword });
 
         if (!validPassword) throw new Error("Password doesnt match");
-        console.log("valid all right");
 
         return user;
       },
