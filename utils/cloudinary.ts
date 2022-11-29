@@ -18,7 +18,7 @@ export async function uploadImage(imagePath: string, imageId?: string) {
   try {
     // Upload the image
     const result = await cloudinary.uploader.upload(imagePath, options);
-    return result.url;
+    return result.secure_url;
   } catch (error) {
     console.error(error);
   }
