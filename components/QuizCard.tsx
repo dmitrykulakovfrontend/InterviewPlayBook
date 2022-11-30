@@ -15,7 +15,7 @@ export default function QuizCard({
   href,
 }: QuizCardProps) {
   return (
-    <div className="max-w-md flex-1 basis-72 flex flex-col justify-between relative py-4 px-8 bg-white shadow-lg rounded-lg">
+    <div className="max-w-md flex-1 basis-72 min-h-[300px] flex flex-col justify-between relative py-4 px-8 bg-white shadow-lg rounded-lg">
       <div className="absolute -top-5 right-0">
         <Image
           className="w-20 h-20 object-cover rounded-full border-2 border-indigo-500"

@@ -47,7 +47,7 @@ model User {
   role          String    @default("user")
   accounts      Account[]
   sessions      Session[]
-  comments      Comment[]
+  // comments      Comment[]
 }
 
 model VerificationToken {
@@ -68,8 +68,7 @@ model Quiz {
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   likes           Int        @default(0)
-  dislikes        Int        @default(0)
-  comments        Comment[]
+  // comments        Comment[]
   questions       Question[]
 }
 
@@ -84,16 +83,16 @@ model Question {
   quizId              String   @db.ObjectId
 }
 
-model Comment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  author    String   @unique
-  content   String
-  likes     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  dislikes  Int      @default(0)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @db.ObjectId
-  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId    String   @db.ObjectId
-}
+// model Comment {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   author    String   @unique
+//   content   String
+//   likes     Int      @default(0)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   dislikes  Int      @default(0)
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId    String   @db.ObjectId
+//   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+//   quizId    String   @db.ObjectId
+// }

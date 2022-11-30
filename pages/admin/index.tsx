@@ -44,7 +44,6 @@ export default function Admin({
     onSuccess(data) {
       toast(`Quiz ${data.result.name} created successfully!`, {
         type: "success",
-        autoClose: false,
       });
     },
     onError(error) {
