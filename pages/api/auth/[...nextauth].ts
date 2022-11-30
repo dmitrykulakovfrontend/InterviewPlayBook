@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.password || !user.password) return null;
 
         const validPassword = await compare(
-          credentials.password,
+          credentials.password.trim(),
           user.password
         );
 
