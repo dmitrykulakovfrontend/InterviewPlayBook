@@ -13,10 +13,18 @@ import {
 import { toast } from "react-toastify";
 import { trpc } from "utils/trpc";
 import router from "next/router";
+import { useSession } from "next-auth/react";
 
 export default function QuizzesPage({
   quizzes,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated: () => {
+      router.push("/");
+    },
+  });
+
   const { mutate: deleteQuiz, isLoading } = trpc.deleteQuiz.useMutation({
     onSuccess(data) {
       toast(`Quiz ${data.result.name} deleted successfully!`, {
@@ -30,6 +38,14 @@ export default function QuizzesPage({
       });
     },
   });
+
+  if (session?.user.role !== "admin") {
+    return (
+      <Layout>
+        <p>Admin access required</p>
+      </Layout>
+    );
+  }
 
   return (
     <Layout aside>

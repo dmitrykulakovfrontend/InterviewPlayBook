@@ -14,13 +14,19 @@ import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
 import DataBox from "components/DataBox";
 import QuizForm from "components/QuizForm";
+import router from "next/router";
 
 export default function Admin({
   usersAmount,
   commentsAmount,
   quizzessAmount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated: () => {
+      router.push("/");
+    },
+  });
 
   const onSubmit = async (data: Quiz) => {
     let base64Icon = await getBase64(data.icon[0]);

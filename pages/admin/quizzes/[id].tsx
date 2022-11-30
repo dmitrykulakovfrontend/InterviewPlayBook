@@ -11,10 +11,18 @@ import { trpc } from "utils/trpc";
 import { Quiz as ZodQuiz } from "utils/validations";
 import { toast } from "react-toastify";
 import { getBase64 } from "utils/getBase64";
+import router from "next/router";
+import { useSession } from "next-auth/react";
 
 export default function QuizEditPage({
   quiz,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated: () => {
+      router.push("/");
+    },
+  });
   const onSubmit = async (data: ZodQuiz) => {
     let base64Icon = await getBase64(data.icon[0]);
     const { description, questions, mainDescription, name } = data;
@@ -42,6 +50,15 @@ export default function QuizEditPage({
       });
     },
   });
+
+  if (session?.user.role !== "admin") {
+    return (
+      <Layout>
+        <p>Admin access required</p>
+      </Layout>
+    );
+  }
+
   return (
     <Layout aside>
       <div className="flex flex-wrap items-center w-full h-full gap-4 p-4 justify-evenly">
@@ -67,15 +84,19 @@ export const getServerSideProps: GetServerSideProps<
   },
   Params
 > = async ({ params }) => {
-  let quiz = await prisma.quiz.findFirstOrThrow({
-    where: { id: params?.id },
-    include: { questions: true },
-  });
+  try {
+    let quiz = await prisma.quiz.findFirstOrThrow({
+      where: { id: params?.id },
+      include: { questions: true },
+    });
+    quiz = JSON.parse(JSON.stringify(quiz));
+    return {
+      props: {
+        quiz,
+      },
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
   // fixes problem with not serializable Date object
-  quiz = JSON.parse(JSON.stringify(quiz));
-  return {
-    props: {
-      quiz,
-    },
-  };
 };
