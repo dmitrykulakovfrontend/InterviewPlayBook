@@ -25,7 +25,7 @@ export default function SignIn() {
   } = useForm<SignUp>({
     resolver: zodResolver(signUpSchema),
   });
-  const { mutate: SignUpUser, isLoading } = trpc.signUp.useMutation({
+  const { mutate: SignUpUser, isLoading } = trpc.auth.signUp.useMutation({
     onSuccess(data) {
       toast(`Please log in now with ${data.result}.`, {
         type: "success",

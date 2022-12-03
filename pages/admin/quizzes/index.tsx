@@ -25,7 +25,7 @@ export default function QuizzesPage({
     },
   });
 
-  const { mutate: deleteQuiz, isLoading } = trpc.deleteQuiz.useMutation({
+  const { mutate: deleteQuiz, isLoading } = trpc.quiz.delete.useMutation({
     onSuccess(data) {
       toast(`Quiz ${data.result.name} deleted successfully!`, {
         type: "success",
@@ -83,7 +83,7 @@ export default function QuizzesPage({
                 onClick={() => {
                   deleteQuiz(quiz.id);
                 }}
-                className="absolute -top-5 -right-5  text-xl font-medium  bg-red-500 hover:bg-red-600  w-12 h-12 rounded-full border"
+                className="absolute w-12 h-12 text-xl font-medium bg-red-500 border rounded-full -top-5 -right-5 hover:bg-red-600"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="text-white" />
               </button>

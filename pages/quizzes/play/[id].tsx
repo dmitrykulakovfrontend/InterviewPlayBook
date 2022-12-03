@@ -29,7 +29,7 @@ export default function QuizPlay({
     setQuestionChoices(shuffleArray([...question.choices, question.answer]));
   }, [question]);
 
-  const { mutate: completeQuiz } = trpc.completeQuiz.useMutation();
+  const { mutate: completeQuiz } = trpc.quiz.complete.useMutation();
 
   const nextQuestion = () => {
     let userAnswer = questionChoices[selectedQuestion];
@@ -99,7 +99,7 @@ export default function QuizPlay({
         </Head>
         <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col justify-center items-center gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
           <h2 className="text-4xl font-bold">{question.text}</h2>
-          <div className="flex flex-wrap border gap-4 p-4 w-4/5 rounded-xl  shadow-lg">
+          <div className="flex flex-wrap w-4/5 gap-4 p-4 border shadow-lg rounded-xl">
             {results.map((result, i) => (
               <div
                 key={i}
@@ -128,7 +128,7 @@ export default function QuizPlay({
           </div>
           <Link
             href={"/"}
-            className="text-xl w-fit font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
+            className="px-4 py-2 text-xl font-medium text-indigo-500 border rounded-md w-fit hover:bg-gray-100"
           >
             Go back to quizzes
           </Link>
@@ -145,10 +145,10 @@ export default function QuizPlay({
         <meta name="description" content={question.text} />
       </Head>
       <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
-        <h2 className="text-4xl  w-4/5 text-center font-bold break-words max-md:text-xl">
+        <h2 className="w-4/5 text-4xl font-bold text-center break-words max-md:text-xl">
           {question.text}
         </h2>
-        <div className="flex flex-wrap border  rounded-lg gap-4 p-4 w-4/5  shadow-lg">
+        <div className="flex flex-wrap w-4/5 gap-4 p-4 border rounded-lg shadow-lg">
           {questionChoices.map((text, i) => (
             <div
               onClick={() => setSelectedQuestion(i)}
@@ -163,7 +163,7 @@ export default function QuizPlay({
         </div>
         <button
           onClick={nextQuestion}
-          className="text-xl w-fit font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
+          className="px-4 py-2 text-xl font-medium text-indigo-500 border rounded-md w-fit hover:bg-gray-100"
         >
           Continue
         </button>

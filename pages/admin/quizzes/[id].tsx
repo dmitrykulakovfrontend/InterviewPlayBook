@@ -38,7 +38,7 @@ export default function QuizEditPage({
     });
   };
 
-  const { mutate: updateQuiz, isLoading } = trpc.updateQuiz.useMutation({
+  const { mutate: updateQuiz, isLoading } = trpc.quiz.update.useMutation({
     onSuccess(data) {
       toast(`Quiz ${data.message} created successfully!`, {
         type: "success",

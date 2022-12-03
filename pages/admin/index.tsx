@@ -18,7 +18,6 @@ import router from "next/router";
 
 export default function Admin({
   usersAmount,
-  commentsAmount,
   quizzessAmount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: session, status } = useSession({
@@ -40,7 +39,7 @@ export default function Admin({
       icon: base64Icon,
     });
   };
-  const { mutate: createQuiz, isLoading } = trpc.createQuiz.useMutation({
+  const { mutate: createQuiz, isLoading } = trpc.quiz.create.useMutation({
     onSuccess(data) {
       toast(`Quiz ${data.result.name} created successfully!`, {
         type: "success",
@@ -80,7 +79,6 @@ export default function Admin({
     <Layout aside>
       <div className="flex flex-wrap justify-center w-full gap-4 p-4">
         <DataBox icon={faUsers} valueName="Users" value={usersAmount} />
-        <DataBox icon={faComment} valueName="Comments" value={commentsAmount} />
         <DataBox icon={faQuestion} valueName="Quizzes" value={quizzessAmount} />
       </div>
 
@@ -95,15 +93,14 @@ export default function Admin({
 }
 
 export async function getServerSideProps() {
-  const [usersAmount, commentsAmount, quizzessAmount] = await Promise.all([
+  const [usersAmount, quizzessAmount] = await Promise.all([
     prisma.user.count(),
-    prisma.comment.count(),
+    // prisma.comment.count(),
     prisma.quiz.count(),
   ]);
   return {
     props: {
       usersAmount,
-      commentsAmount,
       quizzessAmount,
     },
   };
