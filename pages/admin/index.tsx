@@ -1,6 +1,7 @@
 import {
   faComment,
   faQuestion,
+  faThumbsUp,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import Layout from "components/Layout";
@@ -18,6 +19,7 @@ import router from "next/router";
 
 export default function Admin({
   usersAmount,
+  likesAmount,
   quizzessAmount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { data: session, status } = useSession({
@@ -79,6 +81,7 @@ export default function Admin({
     <Layout aside>
       <div className="flex flex-wrap justify-center w-full gap-4 p-4">
         <DataBox icon={faUsers} valueName="Users" value={usersAmount} />
+        <DataBox icon={faThumbsUp} valueName="Likes" value={likesAmount} />
         <DataBox icon={faQuestion} valueName="Quizzes" value={quizzessAmount} />
       </div>
 
@@ -93,14 +96,18 @@ export default function Admin({
 }
 
 export async function getServerSideProps() {
-  const [usersAmount, quizzessAmount] = await Promise.all([
+  const [usersAmount, likes, quizzessAmount] = await Promise.all([
     prisma.user.count(),
-    // prisma.comment.count(),
+    prisma.quiz.findMany({}),
     prisma.quiz.count(),
   ]);
   return {
     props: {
       usersAmount,
+      likesAmount: likes.reduce(
+        (acc, curr) => acc + curr.usersWhoLikedId.length,
+        0
+      ),
       quizzessAmount,
     },
   };

@@ -13,12 +13,14 @@ export const authOptions: NextAuthOptions = {
     jwt: async ({ token, user }) => {
       if (user) {
         token.role = user.role;
+        token.id = user.id;
       }
 
       return token;
     },
     session: async ({ session, token }) => {
       session.user.role = token.role;
+      session.user.id = token.id;
       return session;
     },
   },
@@ -40,6 +42,10 @@ export const authOptions: NextAuthOptions = {
           label: "Email",
           type: "text",
           placeholder: "jsmith@gmail.com",
+        },
+        role: {
+          type: "radio",
+          value: "user",
         },
       },
       async authorize(credentials) {

@@ -3,6 +3,7 @@ import { uploadImage } from "utils/cloudinary";
 import {
   quizSchema,
   updateQuizSchema,
+  userLikeSchema,
   userResultsSchema,
 } from "utils/validations";
 import { z } from "zod";
@@ -186,5 +187,62 @@ export const quizRouter = router({
         );
       }
       await Promise.all(promises);
+    }),
+  data: publicProcedure.input(z.string()).query(async ({ input: id, ctx }) => {
+    return await ctx.prisma.quiz.findFirst({ where: { id } });
+  }),
+  like: publicProcedure
+    .input(userLikeSchema)
+    .mutation(async ({ input: { quizId, userId }, ctx }) => {
+      let quiz = await ctx.prisma.quiz.findFirst({ where: { id: quizId } });
+
+      if (!quiz) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No such quiz: " + quizId,
+        });
+      }
+
+      let isLiked = quiz.usersWhoLikedId.includes(userId);
+
+      if (isLiked) {
+        let newUsersWhoLiked = quiz.usersWhoLikedId.filter(
+          (likedUserId) => likedUserId !== userId
+        );
+
+        let [newQuiz, user] = await Promise.all([
+          ctx.prisma.quiz.update({
+            where: { id: quizId },
+            data: { usersWhoLikedId: newUsersWhoLiked },
+          }),
+          ctx.prisma.user.update({
+            where: { id: userId },
+            data: { likedQuizzesId: newUsersWhoLiked },
+          }),
+        ]);
+
+        return {
+          status: 201,
+          message: "Quiz like removed successfully",
+          newQuiz,
+        };
+      } else {
+        let [newQuiz, user] = await Promise.all([
+          ctx.prisma.quiz.update({
+            where: { id: quizId },
+            data: { usersWhoLikedId: { push: userId } },
+          }),
+          ctx.prisma.user.update({
+            where: { id: userId },
+            data: { likedQuizzesId: { push: userId } },
+          }),
+        ]);
+
+        return {
+          status: 201,
+          message: "Quiz liked successfully",
+          newQuiz,
+        };
+      }
     }),
 });

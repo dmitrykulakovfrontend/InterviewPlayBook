@@ -52,8 +52,14 @@ export const userResultsSchema = z.object({
   quizId: z.string().trim(),
 });
 
+export const userLikeSchema = z.object({
+  quizId: z.string().trim(),
+  userId: z.string().trim(),
+});
+
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;
 export type Quiz = z.infer<typeof quizSchema>;
 export type UpdateQuiz = z.infer<typeof updateQuizSchema>;
 export type userResults = z.infer<typeof userResultsSchema>;
+export type userLike = z.infer<typeof userLikeSchema>;

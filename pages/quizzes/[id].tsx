@@ -7,9 +7,28 @@ import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import { Quiz } from "@prisma/client";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import LikeButton from "components/LikeButton";
+import { trpc } from "utils/trpc";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
 export default function QuizPage({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { mutate: likeQuiz } = trpc.quiz.like.useMutation({
+    onSuccess(data) {
+      refetch();
+    },
+    onError(error, variables, context) {
+      toast.error(error.message);
+    },
+  });
+  const { data, isLoading, refetch } = trpc.quiz.data.useQuery(quiz.id, {
+    queryKey: ["quiz.data", "qu"],
+  });
+  const { data: session, status } = useSession();
   return (
     <Layout>
       <Head>
@@ -34,33 +53,62 @@ export default function QuizPage({
             height={400}
             priority
           />
-          <div className="flex gap-4 text-2xl font-sans">
+          <div className="flex gap-4 font-sans text-2xl">
             <div className="flex flex-col">
               <h3>Created:</h3>
               <h3>Times Played:</h3>
               <h3>Likes:</h3>
-              <h3>Dislikes:</h3>
               <h3>Updated:</h3>
             </div>
             <div className="flex flex-col">
               <span>{new Date(quiz.createdAt).toLocaleDateString()}</span>
-              <span>{quiz.timesPlayed}</span>
-              <span>{quiz.likes}</span>
-              <span>{quiz.dislikes}</span>
+              <span>
+                {data ? data.timesPlayed : <Skeleton width={110} height={30} />}
+              </span>
+              <span>
+                {data ? (
+                  data.usersWhoLikedId.length
+                ) : (
+                  <Skeleton width={110} height={30} />
+                )}
+              </span>
               <span>{new Date(quiz.updatedAt).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
         <h2 className="text-2xl font-bold">Description:</h2>
-        <p className="text-lg whitespace-pre-wrap  text-center">
+        <p className="text-lg text-center whitespace-pre-wrap">
           {quiz.mainDescription}
         </p>
-        <Link
-          href={`/quizzes/play/${quiz.id}`}
-          className="text-xl w-fit font-medium text-indigo-500 hover:bg-gray-100  py-2 px-4 rounded-md border"
-        >
-          Start
-        </Link>
+        <div className="flex gap-4 justify-self-end;">
+          <Link
+            href={`/quizzes/play/${quiz.id}`}
+            className="px-4 py-2 text-xl font-medium text-indigo-500 border rounded-md w-fit hover:bg-gray-100"
+          >
+            Start
+          </Link>
+          {data ? (
+            <LikeButton
+              isLiked={
+                data.usersWhoLikedId.includes(session?.user.id || "") &&
+                session !== null
+              }
+              onClick={() => {
+                if (session) {
+                  likeQuiz({
+                    quizId: quiz.id,
+                    userId: session.user.id,
+                  });
+                } else {
+                  toast.info("To like that quiz, you need to authenticate");
+                }
+              }}
+              amount={data.usersWhoLikedId.length}
+            />
+          ) : (
+            <Skeleton width={80} height={45} />
+          )}
+        </div>
       </div>
     </Layout>
   );
