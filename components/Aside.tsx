@@ -10,21 +10,21 @@ export default function Aside() {
   return (
     <aside
       id="sidebar"
-      className="sticky z-50 h-screen top-0 left-0 mt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
+      className="sticky top-0 left-0 z-50 flex flex-col flex-shrink-0 w-64 h-screen mt-16 duration-75 lg:flex transition-width"
       aria-label="Sidebar"
     >
-      <div className="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0">
-        <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-          <div className="flex-1 px-3 bg-white divide-y space-y-1">
-            <ul className="space-y-2 pb-2">
+      <div className="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200">
+        <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
+          <div className="flex-1 px-3 space-y-1 bg-white divide-y">
+            <ul className="pb-2 space-y-2">
               <li>
                 <Link
                   href="/admin"
-                  className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
+                  className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100 group"
                 >
                   <FontAwesomeIcon
                     icon={faHome}
-                    className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75"
+                    className="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   />
                   <span className="ml-3">Home</span>
                 </Link>
@@ -32,24 +32,24 @@ export default function Aside() {
               <li>
                 <Link
                   href="/admin/quizzes"
-                  className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"
+                  className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg hover:bg-gray-100 group"
                 >
                   <FontAwesomeIcon
                     icon={faQuestion}
-                    className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75"
+                    className="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   />
                   <span className="ml-3">Quizzes</span>
                 </Link>
               </li>
             </ul>
-            <div className="space-y-2 pt-2">
+            <div className="pt-2 space-y-2">
               <Link
                 href="/admin"
-                className="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 group transition duration-75 flex items-center p-2"
+                className="flex items-center p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group"
               >
                 <FontAwesomeIcon
                   icon={faBookOpen}
-                  className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
+                  className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900"
                 />
 
                 <span className="ml-3">Documentation (WIP)</span>

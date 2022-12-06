@@ -75,7 +75,7 @@ export default function SignIn() {
         <Link href="/" className="flex flex-col items-center justify-center">
           <Image
             src={logoIcon}
-            className="h-20 w-20 text-gray-500"
+            className="w-20 h-20 text-gray-500"
             alt=""
             width={80}
             height={80}
@@ -84,7 +84,7 @@ export default function SignIn() {
             Interview PlayBook
           </span>
         </Link>
-        <div className="bg-white shadow-lg w-full rounded-lg divide-y divide-gray-200">
+        <div className="w-full bg-white divide-y divide-gray-200 rounded-lg shadow-lg">
           <Form
             buttonLabel="Login"
             handleSubmit={handleSubmit}
@@ -130,7 +130,7 @@ export default function SignIn() {
           <div className="py-5">
             <div className="flex flex-wrap justify-center w-full gap-1">
               <Link href="/auth/signup">
-                <button className="text-center sm:text-left whitespace-nowrap transition duration-200 mx-5 px-5 py-4 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
+                <button className="px-5 py-4 mx-5 text-sm font-normal text-center text-gray-500 transition duration-200 rounded-lg cursor-pointer sm:text-left whitespace-nowrap hover:bg-gray-100 focus:outline-none focus:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
                   <FontAwesomeIcon icon={faSignIn} />
                   <span className="inline-block ml-1">Sign Up</span>
                 </button>
@@ -142,7 +142,7 @@ export default function SignIn() {
           <div className="grid grid-cols-2 gap-1">
             <div className="text-center sm:text-left whitespace-nowrap">
               <Link href="/">
-                <button className="transition duration-200 mx-5 px-5 py-4 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-200 focus:outline-none focus:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
+                <button className="px-5 py-4 mx-5 text-sm font-normal text-gray-500 transition duration-200 rounded-lg cursor-pointer hover:bg-gray-200 focus:outline-none focus:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
                   <FontAwesomeIcon icon={faArrowLeftLong} />
                   <span className="inline-block ml-1">Back to home page</span>
                 </button>

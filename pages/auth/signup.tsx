@@ -69,11 +69,11 @@ export default function SignIn() {
       <div className="xs:p-0 md:max-w-md">
         <Link
           href="/"
-          className="flex flex-col mb-4 items-center justify-center"
+          className="flex flex-col items-center justify-center mb-4"
         >
           <Image
             src={logoIcon}
-            className="h-20 w-20 text-gray-500"
+            className="w-20 h-20 text-gray-500"
             alt=""
             width={80}
             height={80}
@@ -82,7 +82,7 @@ export default function SignIn() {
             Interview PlayBook
           </span>
         </Link>
-        <div className="bg-white shadow-lg w-full rounded-lg divide-y divide-gray-200">
+        <div className="w-full bg-white divide-y divide-gray-200 rounded-lg shadow-lg">
           <Form
             buttonLabel="Sign Up"
             handleSubmit={handleSubmit}
@@ -121,7 +121,7 @@ export default function SignIn() {
           <div className="grid grid-cols-2 gap-1">
             <div className="text-center sm:text-left whitespace-nowrap">
               <Link href="/auth/signin">
-                <button className="transition duration-200 mx-5 px-5 py-4 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-200 focus:outline-none focus:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
+                <button className="px-5 py-4 mx-5 text-sm font-normal text-gray-500 transition duration-200 rounded-lg cursor-pointer hover:bg-gray-200 focus:outline-none focus:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset">
                   <FontAwesomeIcon icon={faArrowLeftLong} />
                   <span className="inline-block ml-1">Back to sign in</span>
                 </button>

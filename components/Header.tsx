@@ -15,12 +15,12 @@ export default function Header() {
   const { data: session, status } = useSession();
   if (status === "loading")
     return (
-      <div className="bg-white w-screen shadow-md fixed z-40 top-0 border py-3 px-6">
+      <div className="fixed top-0 z-40 w-screen px-6 py-3 bg-white border shadow-md">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center relative z-[99]">
             <Image
               src={logoIcon}
-              className="h-10 w-10 text-gray-500"
+              className="w-10 h-10 text-gray-500"
               alt="Interview PlayBook"
               width={40}
               height={40}
@@ -30,8 +30,8 @@ export default function Header() {
               Interview PlayBook
             </span>
           </Link>
-          <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
-            <div className="flex items-center justify-center gap-x-1 rounded-md py-2 px-2">
+          <div className="flex items-center justify-center gap-4 ml-2 max-sm:gap-1">
+            <div className="flex items-center justify-center px-2 py-2 rounded-md gap-x-1">
               <Skeleton circle width={25} height={25} />
               <Skeleton
                 count={1}
@@ -43,13 +43,13 @@ export default function Header() {
             <Skeleton
               count={1}
               width={90}
-              className="ml-2 flex items-center gap-x-1 rounded-md border py-2 px-4"
+              className="flex items-center px-4 py-2 ml-2 border rounded-md gap-x-1"
             />
 
             <Skeleton
               count={1}
               width={90}
-              className="ml-2 flex items-center gap-x-1 rounded-md border py-2 px-4"
+              className="flex items-center px-4 py-2 ml-2 border rounded-md gap-x-1"
             />
           </div>
         </div>
@@ -58,12 +58,12 @@ export default function Header() {
 
   if (status === "unauthenticated")
     return (
-      <div className="bg-white w-screen shadow-md fixed z-50 top-0 border py-3 px-6">
+      <div className="fixed top-0 z-50 w-screen px-6 py-3 bg-white border shadow-md">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center">
             <Image
               src={logoIcon}
-              className="h-10 w-10 text-gray-500"
+              className="w-10 h-10 text-gray-500"
               alt=""
               width={40}
               height={40}
@@ -73,18 +73,18 @@ export default function Header() {
               Interview PlayBook
             </span>
           </Link>
-          <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
+          <div className="flex items-center justify-center gap-4 ml-2 max-sm:gap-1">
             <HeaderLink href="/" title="Quizzes" icon={faPlay} />
             <>
               <Link
                 href="/auth/signin"
-                className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
+                className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100"
               >
                 <span className="text-sm font-medium">Sign in</span>
               </Link>
               <Link
                 href="/auth/signup"
-                className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
+                className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100"
               >
                 <span className="text-sm font-medium">Sign Up</span>
               </Link>
@@ -96,12 +96,12 @@ export default function Header() {
 
   if (status === "authenticated")
     return (
-      <div className="bg-white w-screen shadow-md fixed z-50 top-0 border py-3 px-6">
+      <div className="fixed top-0 z-50 w-screen px-6 py-3 bg-white border shadow-md">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center">
             <Image
               src={logoIcon}
-              className="h-10 w-10 text-gray-500"
+              className="w-10 h-10 text-gray-500"
               alt=""
               width={40}
               height={40}
@@ -111,7 +111,7 @@ export default function Header() {
               Interview PlayBook
             </span>
           </Link>
-          <div className="ml-2 flex items-center justify-center gap-4 max-sm:gap-1">
+          <div className="flex items-center justify-center gap-4 ml-2 max-sm:gap-1">
             <HeaderLink href="/" title="Quizzes" icon={faPlay} />
             <HeaderLink href="/settings" title="Settings" icon={faCog} />
 
@@ -122,7 +122,7 @@ export default function Header() {
               <Image
                 src={session.user.image}
                 alt="Your profile icon"
-                className="h-8 shadow-lg ring-1 rounded-full"
+                className="h-8 rounded-full shadow-lg ring-1"
                 width={32}
                 height={32}
               />
@@ -135,7 +135,7 @@ export default function Header() {
               title={session.user.name!}
             >
               {session.user.role === "admin" && (
-                <span className="text-xs text-red-400 border-solid border border-red-400  mr-2">
+                <span className="mr-2 text-xs text-red-400 border border-red-400 border-solid">
                   Admin{" "}
                 </span>
               )}
@@ -147,7 +147,7 @@ export default function Header() {
                 signOut({ redirect: false });
                 router.push("/");
               }}
-              className="ml-2 flex cursor-pointer items-center gap-x-1 rounded-md border py-2 px-4 hover:bg-gray-100"
+              className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100"
             >
               <span className="text-sm font-medium">Sign Out</span>
             </button>
@@ -171,7 +171,7 @@ type HeaderLinkProps = {
 const HeaderLink = ({ title, icon, href }: HeaderLinkProps) => {
   return (
     <Link href={href}>
-      <div className="flex cursor-pointer items-center gap-x-1 rounded-md py-2 px-2  hover:bg-gray-100">
+      <div className="flex items-center px-2 py-2 rounded-md cursor-pointer gap-x-1 hover:bg-gray-100">
         <FontAwesomeIcon
           icon={icon}
           className="text-xl text-gray-500 fill-white"

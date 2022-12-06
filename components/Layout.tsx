@@ -16,7 +16,7 @@ export default function Layout({ children, aside }: LayoutProps) {
 
         <div className="flex">
           <Aside />
-          <main className="flex flex-1 flex-col justify-center mt-16 gap-4 items-center">
+          <main className="flex flex-col items-center justify-center flex-1 gap-4 mt-16">
             {children}
           </main>
         </div>
@@ -26,7 +26,7 @@ export default function Layout({ children, aside }: LayoutProps) {
     <div className="h-screen">
       <Header />
 
-      <main className="flex flex-col justify-center mt-16 gap-4 items-center">
+      <main className="flex flex-col items-center justify-center gap-4 mt-16">
         {children}
       </main>
     </div>

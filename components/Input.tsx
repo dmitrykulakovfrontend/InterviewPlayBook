@@ -12,7 +12,7 @@ interface InputProps<T extends FieldValues>
 }
 
 const className =
-  "w-full py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-400 dark:border-gray-700 text-gray-800 dark:text-gray-50 font-semibold focus:border-blue-500 focus:outline-none";
+  "w-full px-3 py-3 font-semibold text-gray-800 bg-white border border-gray-400 rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50 focus:border-blue-500 focus:outline-none";
 
 export default function Input<T extends FieldValues>({
   register,

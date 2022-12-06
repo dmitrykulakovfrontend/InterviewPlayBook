@@ -23,7 +23,7 @@ export default function Form<T extends FieldValues>({
   ...rest
 }: FormProps<T>) {
   return (
-    <div className="bg-white w-full rounded-lg">
+    <div className="w-full bg-white rounded-lg">
       <form
         className={
           "px-5 py-7 rounded-lg  gap-4 flex flex-col items-center " +
@@ -48,7 +48,7 @@ export default function Form<T extends FieldValues>({
         {buttonLabel && (
           <button
             type="submit"
-            className="w-fit py-3 px-5 transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+            className="inline-block px-5 py-3 text-sm font-semibold text-center text-white transition duration-200 bg-blue-500 rounded-lg shadow-sm w-fit hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 hover:shadow-md"
           >
             <span className="inline-block mr-2">{buttonLabel}</span>
             <FontAwesomeIcon icon={icon} />
