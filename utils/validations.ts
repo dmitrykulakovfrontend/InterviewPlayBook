@@ -57,6 +57,15 @@ export const userLikeSchema = z.object({
   userId: z.string().trim(),
 });
 
+export const userSettingsSchema = z.object({
+  email: z.string().trim().email().optional(),
+  newPassword: z.string().trim().optional(),
+  currentPassword: z.string().trim().optional(),
+  name: z.string().trim().optional(),
+  avatar: z.any().optional(),
+});
+
+export type userSettings = z.infer<typeof userSettingsSchema>;
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;
 export type Quiz = z.infer<typeof quizSchema>;
