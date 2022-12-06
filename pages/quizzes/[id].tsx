@@ -7,8 +7,6 @@ import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import { Quiz } from "@prisma/client";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import LikeButton from "components/LikeButton";
 import { trpc } from "utils/trpc";
 import { useSession } from "next-auth/react";

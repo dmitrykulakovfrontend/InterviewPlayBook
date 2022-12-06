@@ -210,16 +210,10 @@ export const quizRouter = router({
           (likedUserId) => likedUserId !== userId
         );
 
-        let [newQuiz, user] = await Promise.all([
-          ctx.prisma.quiz.update({
-            where: { id: quizId },
-            data: { usersWhoLikedId: newUsersWhoLiked },
-          }),
-          ctx.prisma.user.update({
-            where: { id: userId },
-            data: { likedQuizzesId: newUsersWhoLiked },
-          }),
-        ]);
+        let newQuiz = await ctx.prisma.quiz.update({
+          where: { id: quizId },
+          data: { usersWhoLikedId: newUsersWhoLiked },
+        });
 
         return {
           status: 201,
@@ -227,16 +221,10 @@ export const quizRouter = router({
           newQuiz,
         };
       } else {
-        let [newQuiz, user] = await Promise.all([
-          ctx.prisma.quiz.update({
-            where: { id: quizId },
-            data: { usersWhoLikedId: { push: userId } },
-          }),
-          ctx.prisma.user.update({
-            where: { id: userId },
-            data: { likedQuizzesId: { push: userId } },
-          }),
-        ]);
+        let newQuiz = await ctx.prisma.quiz.update({
+          where: { id: quizId },
+          data: { usersWhoLikedId: { push: userId } },
+        });
 
         return {
           status: 201,
