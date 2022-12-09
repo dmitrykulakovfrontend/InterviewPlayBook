@@ -5,7 +5,7 @@ export const signInSchema = z.object({
   password: z
     .string()
     .trim()
-    .min(5, { message: "Password must contain atleast 5 characters" })
+    .min(4, { message: "Password must contain atleast 5 characters" })
     .max(60, { message: "Password maximum length is 60" }),
 });
 
@@ -59,8 +59,20 @@ export const userLikeSchema = z.object({
 
 export const userSettingsSchema = z.object({
   email: z.string().trim().email().optional(),
-  newPassword: z.string().trim().optional(),
-  currentPassword: z.string().trim().optional(),
+  currentPassword: z
+    .string()
+    .trim()
+    .min(4, { message: "Password must contain atleast 5 characters" })
+    .max(60, { message: "Password maximum length is 60" })
+    .optional()
+    .or(z.literal("")),
+  newPassword: z
+    .string()
+    .trim()
+    .min(4, { message: "Password must contain atleast 5 characters" })
+    .max(60, { message: "Password maximum length is 60" })
+    .optional()
+    .or(z.literal("")),
   name: z.string().trim().optional(),
   avatar: z.any().optional(),
 });
