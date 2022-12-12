@@ -10,6 +10,7 @@ import Spinner from "./Spinner";
 import router from "next/router";
 import Skeleton from "react-loading-skeleton";
 import Layout from "./Layout";
+import DefaultIcon from "./DefaultIcon";
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -127,7 +128,7 @@ export default function Header() {
                 height={32}
               />
             ) : (
-              <div className="h-8 w-8 bg-[url('../public/blank-profile-picture.png')] bg-no-repeat bg-center bg-cover bg-white  shadow-lg ring-black ring-1 rounded-full" />
+              <DefaultIcon height={32} width={32} />
             )}
 
             <span

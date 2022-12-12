@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import DefaultIcon from "components/DefaultIcon";
 import Layout from "components/Layout";
 import { getSession, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -130,11 +131,11 @@ export default function Settings() {
                       className="object-cover object-center w-20 h-20 mt-5 rounded-full shrink-0"
                       src={session.user.image}
                       alt="Current profile photo"
-                      width={32}
-                      height={32}
+                      width={80}
+                      height={80}
                     />
                   ) : (
-                    <div className="h-8 w-8 bg-[url('../public/blank-profile-picture.png')] bg-no-repeat bg-center bg-cover bg-white  shadow-lg ring-black ring-1 rounded-full" />
+                    <DefaultIcon height={32} width={32} />
                   )}
 
                   <label className="block pt-2">

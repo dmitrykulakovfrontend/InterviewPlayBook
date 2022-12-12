@@ -12,6 +12,14 @@ import { trpc } from "utils/trpc";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
+import QuizzComment from "components/QuizzComment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleInfo,
+  faInfo,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import DefaultIcon from "components/DefaultIcon";
 export default function QuizPage({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -40,7 +48,7 @@ export default function QuizPage({
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content={quiz.icon} />
       </Head>
-      <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12  max-lg:items-center">
+      <div className="w-4/5 min-h-[80vh] mt-8 border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12  max-lg:items-center">
         <h2 className="text-4xl font-bold">{quiz.name}</h2>
         <div className="flex justify-start gap-12 max-lg:flex-col">
           <Image
@@ -78,7 +86,7 @@ export default function QuizPage({
         <p className="text-lg text-center whitespace-pre-wrap">
           {quiz.mainDescription}
         </p>
-        <div className="flex gap-4 justify-self-end;">
+        <div className="flex gap-4 py-2 border-b-2 justify-self-end">
           <Link
             href={`/quizzes/play/${quiz.id}`}
             className="px-4 py-2 text-xl font-medium text-indigo-500 border rounded-md w-fit hover:bg-gray-100"
@@ -107,6 +115,80 @@ export default function QuizPage({
             <Skeleton width={80} height={45} />
           )}
         </div>
+        <form className="flex items-center justify-center w-full max-w-xl p-4 mx-auto border rounded-2xl">
+          <div className="flex flex-wrap ">
+            {session?.user.image ? (
+              <div className="flex items-center w-full gap-4 px-3">
+                <Image
+                  className="w-12 h-12 rounded-full"
+                  src={session.user.image}
+                  alt=""
+                  height="48"
+                  width="48"
+                />
+                <div className="text-sm font-semibold">
+                  {session.user.name} •{" "}
+                  <span className="font-normal">Just now</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center w-full gap-4 px-3">
+                <DefaultIcon height={48} width={48} />
+                <div className="text-sm font-semibold">
+                  You •<span className="font-normal">Just now</span>
+                </div>
+              </div>
+            )}
+
+            <div className="w-full px-3 mt-2 mb-2 md:w-full">
+              <textarea
+                className="w-full h-20 px-3 py-2 font-medium leading-normal placeholder-gray-700 bg-gray-100 border border-gray-400 rounded resize-none focus:outline-none focus:bg-white"
+                name="body"
+                placeholder="Type Your Comment"
+                required
+                disabled={!session}
+              ></textarea>
+            </div>
+            <div className="flex items-start justify-between w-full gap-4 px-3 md:w-full max-sm:flex-col max-sm:items-center">
+              <div className="flex items-center px-2 text-gray-700">
+                <FontAwesomeIcon className="w-5 h-5 mr-1" icon={faCircleInfo} />
+                <p className="pt-px text-sm ">Login to write comments</p>
+              </div>
+              {session ? (
+                <button
+                  type="submit"
+                  className="px-4 py-1 mr-1 font-medium tracking-wide text-gray-700 bg-white border border-gray-400 rounded-lg hover:bg-gray-100"
+                >
+                  Post Comment
+                </button>
+              ) : (
+                <Link
+                  href="/auth/signin"
+                  className="px-4 py-1 mr-1 font-medium tracking-wide text-gray-700 bg-white border border-gray-400 rounded-lg hover:bg-gray-100"
+                >
+                  <span className="text-sm font-medium">Sign in</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </form>
+        <ul className="mt-8 ">
+          <li>
+            <QuizzComment />
+          </li>
+          <li>
+            <QuizzComment />
+          </li>
+          <li>
+            <QuizzComment />
+          </li>
+          <li>
+            <QuizzComment />
+          </li>
+          <li>
+            <QuizzComment />
+          </li>
+        </ul>
       </div>
     </Layout>
   );
