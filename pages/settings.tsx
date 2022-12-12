@@ -10,7 +10,7 @@ import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
 import { getBase64 } from "utils/getBase64";
 import { trpc } from "utils/trpc";
-import { userSettingsSchema, userSettings } from "utils/validations";
+import { userSettingsSchema, UserSettings } from "utils/validations";
 
 export default function Settings() {
   const { data: session, status } = useSession({
@@ -30,11 +30,10 @@ export default function Settings() {
     resolver: zodResolver(userSettingsSchema),
   });
 
-  const onSubmit = async (data: userSettings) => {
+  const onSubmit = async (data: UserSettings) => {
     let icon = null;
     if (data.avatar[0]) icon = await getBase64(data.avatar[0]);
     updateSettings({ ...data, avatar: icon });
-    await getSession();
   };
 
   const { mutate: updateSettings, isLoading } =

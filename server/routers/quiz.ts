@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { uploadImage } from "utils/cloudinary";
 import {
+  commentSchema,
   quizSchema,
   updateQuizSchema,
   userLikeSchema,
@@ -191,7 +192,7 @@ export const quizRouter = router({
   data: publicProcedure.input(z.string()).query(async ({ input: id, ctx }) => {
     return await ctx.prisma.quiz.findFirst({ where: { id } });
   }),
-  like: publicProcedure
+  like: protectedProcedure
     .input(userLikeSchema)
     .mutation(async ({ input: { quizId, userId }, ctx }) => {
       let quiz = await ctx.prisma.quiz.findFirst({ where: { id: quizId } });
@@ -230,6 +231,26 @@ export const quizRouter = router({
           status: 201,
           message: "Quiz liked successfully",
           newQuiz,
+        };
+      }
+    }),
+  addComment: protectedProcedure
+    .input(commentSchema)
+    .mutation(async ({ input, ctx }) => {
+      console.log(input);
+      const comment = await ctx.prisma.comment.create({
+        data: {
+          content: input.content,
+          author: input.author,
+          user: { connect: { id: input.authorId } },
+          quiz: { connect: { id: input.quizId } },
+        },
+      });
+      if (comment) {
+        return {
+          status: 201,
+          message: "Commented successfully",
+          comment,
         };
       }
     }),

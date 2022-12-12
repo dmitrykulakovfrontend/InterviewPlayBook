@@ -1,12 +1,14 @@
 import * as z from "zod";
 
+const passwordSchema = z
+  .string()
+  .trim()
+  .min(4, { message: "Password must contain atleast 5 characters" })
+  .max(60, { message: "Password maximum length is 60" });
+
 export const signInSchema = z.object({
   email: z.string().trim().email(),
-  password: z
-    .string()
-    .trim()
-    .min(4, { message: "Password must contain atleast 5 characters" })
-    .max(60, { message: "Password maximum length is 60" }),
+  password: passwordSchema,
 });
 
 export const signUpSchema = signInSchema.extend({
@@ -59,28 +61,24 @@ export const userLikeSchema = z.object({
 
 export const userSettingsSchema = z.object({
   email: z.string().trim().email().optional(),
-  currentPassword: z
-    .string()
-    .trim()
-    .min(4, { message: "Password must contain atleast 5 characters" })
-    .max(60, { message: "Password maximum length is 60" })
-    .optional()
-    .or(z.literal("")),
-  newPassword: z
-    .string()
-    .trim()
-    .min(4, { message: "Password must contain atleast 5 characters" })
-    .max(60, { message: "Password maximum length is 60" })
-    .optional()
-    .or(z.literal("")),
+  currentPassword: passwordSchema.optional().or(z.literal("")),
+  newPassword: passwordSchema.optional().or(z.literal("")),
   name: z.string().trim().optional(),
   avatar: z.any().optional(),
 });
 
-export type userSettings = z.infer<typeof userSettingsSchema>;
+export const commentSchema = z.object({
+  quizId: z.string(),
+  content: z.string().trim().min(1),
+  author: z.string(),
+  authorId: z.string(),
+});
+
+export type UserSettings = z.infer<typeof userSettingsSchema>;
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;
 export type Quiz = z.infer<typeof quizSchema>;
 export type UpdateQuiz = z.infer<typeof updateQuizSchema>;
-export type userResults = z.infer<typeof userResultsSchema>;
-export type userLike = z.infer<typeof userLikeSchema>;
+export type UserResults = z.infer<typeof userResultsSchema>;
+export type UserLike = z.infer<typeof userLikeSchema>;
+export type Comment = z.infer<typeof commentSchema>;

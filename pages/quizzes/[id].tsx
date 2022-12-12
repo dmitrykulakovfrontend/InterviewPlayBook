@@ -20,6 +20,10 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import DefaultIcon from "components/DefaultIcon";
+import { Comment, commentSchema } from "utils/validations";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 export default function QuizPage({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -35,6 +39,34 @@ export default function QuizPage({
     queryKey: ["quiz.data", "qu"],
   });
   const { data: session, status } = useSession();
+
+  const { mutate: addComment } = trpc.quiz.addComment.useMutation({
+    onError(error) {
+      toast(error.message, {
+        type: "error",
+      });
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Comment>({
+    resolver: zodResolver(commentSchema),
+    defaultValues: {
+      author: session?.user.name || "t",
+      authorId: session?.user.id || "t",
+      quizId: quiz.id,
+    },
+  });
+  useEffect(() => console.log(errors), [errors]);
+  const onSubmit = async (data: Comment) => {
+    console.log(data);
+    if (!session?.user.name) return;
+    addComment({ ...data, quizId: quiz.id, author: session.user.name });
+  };
+
   return (
     <Layout>
       <Head>
@@ -115,7 +147,10 @@ export default function QuizPage({
             <Skeleton width={80} height={45} />
           )}
         </div>
-        <form className="flex items-center justify-center w-full max-w-xl p-4 mx-auto border rounded-2xl">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex items-center justify-center w-full max-w-xl p-4 mx-auto border rounded-2xl"
+        >
           <div className="flex flex-wrap ">
             {session?.user.image ? (
               <div className="flex items-center w-full gap-4 px-3">
@@ -140,15 +175,16 @@ export default function QuizPage({
               </div>
             )}
 
-            <div className="w-full px-3 mt-2 mb-2 md:w-full">
-              <textarea
-                className="w-full h-20 px-3 py-2 font-medium leading-normal placeholder-gray-700 bg-gray-100 border border-gray-400 rounded resize-none focus:outline-none focus:bg-white"
-                name="body"
-                placeholder="Type Your Comment"
-                required
-                disabled={!session}
-              ></textarea>
-            </div>
+            {errors.content && (
+              <p className="text-red-500">{errors.content.message as string}</p>
+            )}
+            <textarea
+              className="w-full h-20 px-3 py-2 mt-2 mb-2 font-medium leading-normal placeholder-gray-700 bg-gray-100 border border-gray-400 rounded resize-none md:w-fullw-full focus:outline-none focus:bg-white"
+              {...register("content")}
+              placeholder="Type Your Comment"
+              required
+              disabled={!session}
+            ></textarea>
             <div className="flex items-start justify-between w-full gap-4 px-3 md:w-full max-sm:flex-col max-sm:items-center">
               <div className="flex items-center px-2 text-gray-700">
                 <FontAwesomeIcon className="w-5 h-5 mr-1" icon={faCircleInfo} />
