@@ -190,11 +190,14 @@ export const quizRouter = router({
       await Promise.all(promises);
     }),
   data: publicProcedure.input(z.string()).query(async ({ input: id, ctx }) => {
-    return await ctx.prisma.quiz.findFirst({ where: { id } });
+    return await ctx.prisma.quiz.findFirst({
+      where: { id },
+      include: { comments: true },
+    });
   }),
   like: protectedProcedure
     .input(userLikeSchema)
-    .mutation(async ({ input: { quizId, userId }, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       let quiz = await ctx.prisma.quiz.findFirst({ where: { id: quizId } });
 
       if (!quiz) {
@@ -244,6 +247,7 @@ export const quizRouter = router({
           author: input.author,
           user: { connect: { id: input.authorId } },
           quiz: { connect: { id: input.quizId } },
+          authorAvatar: input.authorAvatar,
         },
       });
       if (comment) {

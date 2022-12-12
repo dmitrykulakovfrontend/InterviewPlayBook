@@ -51,16 +51,21 @@ export default function QuizPage({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<Comment>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
-      author: session?.user.name || "t",
-      authorId: session?.user.id || "t",
       quizId: quiz.id,
     },
   });
-  useEffect(() => console.log(errors), [errors]);
+  useEffect(() => {
+    if (session && session.user.name && session.user.image) {
+      setValue("author", session.user.name);
+      setValue("authorId", session.user.id);
+      setValue("authorAvatar", session.user.image);
+    }
+  }, [session, setValue]);
   const onSubmit = async (data: Comment) => {
     console.log(data);
     if (!session?.user.name) return;
@@ -209,21 +214,55 @@ export default function QuizPage({
           </div>
         </form>
         <ul className="mt-8 ">
-          <li>
-            <QuizzComment />
-          </li>
-          <li>
-            <QuizzComment />
-          </li>
-          <li>
-            <QuizzComment />
-          </li>
-          <li>
-            <QuizzComment />
-          </li>
-          <li>
-            <QuizzComment />
-          </li>
+          {data ? (
+            data.comments.map((comment, i) => (
+              <li key={i}>
+                <QuizzComment comment={comment} />
+              </li>
+            ))
+          ) : (
+            <>
+              <li>
+                <div className="max-w-xl px-10 py-5 mx-auto mt-4 transition duration-500 bg-white border rounded-2xl hover:shadow-xl">
+                  <div className="flex items-center gap-4">
+                    <Skeleton circle height={48} width={48} />
+                    <div className="w-1/2 text-sm font-semibold">
+                      <Skeleton />
+                    </div>
+                  </div>
+                  <p className="mt-4 text-gray-600 text-md">
+                    <Skeleton count={5} />
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div className="max-w-xl px-10 py-5 mx-auto mt-4 transition duration-500 bg-white border rounded-2xl hover:shadow-xl">
+                  <div className="flex items-center gap-4">
+                    <Skeleton circle height={48} width={48} />
+                    <div className="w-1/2 text-sm font-semibold">
+                      <Skeleton />
+                    </div>
+                  </div>
+                  <p className="mt-4 text-gray-600 text-md">
+                    <Skeleton count={5} />
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div className="max-w-xl px-10 py-5 mx-auto mt-4 transition duration-500 bg-white border rounded-2xl hover:shadow-xl">
+                  <div className="flex items-center gap-4">
+                    <Skeleton circle height={48} width={48} />
+                    <div className="w-1/2 text-sm font-semibold">
+                      <Skeleton />
+                    </div>
+                  </div>
+                  <p className="mt-4 text-gray-600 text-md">
+                    <Skeleton count={5} />
+                  </p>
+                </div>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </Layout>
