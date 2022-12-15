@@ -86,7 +86,7 @@ model Question {
 model Comment {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   author       String
-  authorAvatar String
+  authorAvatar String?
   content      String
   // likes     Int      @default(0)
   createdAt    DateTime @default(now())

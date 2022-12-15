@@ -72,7 +72,7 @@ export const commentSchema = z.object({
   content: z.string().trim().min(1),
   author: z.string(),
   authorId: z.string(),
-  authorAvatar: z.string().url(),
+  authorAvatar: z.string().url().optional(),
 });
 
 export type UserSettings = z.infer<typeof userSettingsSchema>;

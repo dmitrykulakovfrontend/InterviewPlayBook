@@ -1,52 +1,69 @@
 import Head from "next/head";
-import Layout from "components/Layout";
 import Image from "next/image";
-import prisma from "utils/prisma";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
+
 import { ParsedUrlQuery } from "querystring";
 import { Quiz } from "@prisma/client";
+import { Comment, commentSchema } from "utils/validations";
 
+import Layout from "components/Layout";
+import DefaultIcon from "components/DefaultIcon";
+import QuizzComment from "components/QuizzComment";
 import LikeButton from "components/LikeButton";
+
+import prisma from "utils/prisma";
 import { trpc } from "utils/trpc";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
-import QuizzComment from "components/QuizzComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleInfo,
-  faInfo,
-  faInfoCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import DefaultIcon from "components/DefaultIcon";
-import { Comment, commentSchema } from "utils/validations";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
+
 export default function QuizPage({
   quiz,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { mutate: likeQuiz } = trpc.quiz.like.useMutation({
-    onSuccess(data) {
-      refetch();
-    },
-    onError(error, variables, context) {
-      toast.error(error.message);
-    },
-  });
-  const { data, isLoading, refetch } = trpc.quiz.data.useQuery(quiz.id, {
-    queryKey: ["quiz.data", "qu"],
-  });
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
-  const { mutate: addComment } = trpc.quiz.addComment.useMutation({
-    onError(error) {
-      toast(error.message, {
-        type: "error",
-      });
-    },
+  const { data, refetch } = trpc.quiz.data.useQuery(quiz.id, {
+    queryKey: ["quiz.data", "quiz"],
   });
+
+  const { mutate: likeQuiz } = trpc.quiz.like.useMutation({
+    onSuccess: () => refetch(),
+    onError: (error) => toast.error(error.message),
+  });
+  const handleLike = () => {
+    if (!session) {
+      toast.info("To like that quiz, you need to authenticate");
+      return;
+    }
+    likeQuiz({
+      quizId: quiz.id,
+      userId: session.user.id,
+    });
+  };
+
+  const { mutate: addComment } = trpc.comment.addComment.useMutation({
+    onSuccess: () => refetch(),
+    onError: (error) => toast.error(error.message),
+  });
+  const onSubmit = async (data: Comment) => {
+    if (!session?.user.name) {
+      toast.info("To submit a comment, you need to authenticate");
+      return;
+    }
+    addComment(data);
+  };
+
+  const { mutate: deleteComment } = trpc.comment.deleteComment.useMutation({
+    onSuccess: () => refetch(),
+    onError: (error) => toast.error(error.message),
+  });
+  const handleDelete = (id: string) => deleteComment(id);
 
   const {
     register,
@@ -55,22 +72,15 @@ export default function QuizPage({
     formState: { errors },
   } = useForm<Comment>({
     resolver: zodResolver(commentSchema),
-    defaultValues: {
-      quizId: quiz.id,
-    },
   });
   useEffect(() => {
-    if (session && session.user.name && session.user.image) {
+    if (session && session.user.name) {
       setValue("author", session.user.name);
       setValue("authorId", session.user.id);
-      setValue("authorAvatar", session.user.image);
+      setValue("authorAvatar", session.user.image || undefined);
+      setValue("quizId", quiz.id);
     }
-  }, [session, setValue]);
-  const onSubmit = async (data: Comment) => {
-    console.log(data);
-    if (!session?.user.name) return;
-    addComment({ ...data, quizId: quiz.id, author: session.user.name });
-  };
+  }, [quiz.id, session, setValue]);
 
   return (
     <Layout>
@@ -136,16 +146,7 @@ export default function QuizPage({
                 data.usersWhoLikedId.includes(session?.user.id || "") &&
                 session !== null
               }
-              onClick={() => {
-                if (session) {
-                  likeQuiz({
-                    quizId: quiz.id,
-                    userId: session.user.id,
-                  });
-                } else {
-                  toast.info("To like that quiz, you need to authenticate");
-                }
-              }}
+              onClick={handleLike}
               amount={data.usersWhoLikedId.length}
             />
           ) : (
@@ -153,7 +154,7 @@ export default function QuizPage({
           )}
         </div>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit, (errors) => console.log(errors))}
           className="flex items-center justify-center w-full max-w-xl p-4 mx-auto border rounded-2xl"
         >
           <div className="flex flex-wrap ">
@@ -215,9 +216,13 @@ export default function QuizPage({
         </form>
         <ul className="mt-8 ">
           {data ? (
-            data.comments.map((comment, i) => (
-              <li key={i}>
-                <QuizzComment comment={comment} />
+            data.comments.map((comment) => (
+              <li key={comment.id}>
+                <QuizzComment
+                  comment={comment}
+                  session={session}
+                  handleDelete={handleDelete}
+                />
               </li>
             ))
           ) : (
