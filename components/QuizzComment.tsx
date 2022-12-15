@@ -5,7 +5,12 @@ import { Session } from "next-auth";
 import Image from "next/image";
 import DefaultIcon from "./DefaultIcon";
 type QuizzCommentProps = {
-  comment: Comment;
+  comment: Comment & {
+    user: {
+      name: string | null;
+      image: string | null;
+    };
+  };
   session: Session | null;
   handleDelete: (id: string) => void;
 };
@@ -17,10 +22,10 @@ export default function QuizzComment({
   return (
     <div className="relative max-w-xl px-10 py-5 mx-auto mt-4 transition duration-500 bg-white border rounded-2xl hover:shadow-xl">
       <div className="flex items-center gap-4">
-        {comment.authorAvatar ? (
+        {comment.user.image ? (
           <Image
             className="w-12 h-12 rounded-full"
-            src={comment.authorAvatar}
+            src={comment.user.image}
             alt=""
             height="48"
             width="48"
@@ -30,7 +35,7 @@ export default function QuizzComment({
         )}
 
         <div className="text-sm font-semibold">
-          {comment.author} •{" "}
+          {comment.user.name} •{" "}
           <span
             className="font-normal"
             title={`${new Date(comment.createdAt).toTimeString()} `}
@@ -45,7 +50,7 @@ export default function QuizzComment({
           ? new Date(comment.updatedAt).toDateString()
           : ""}
       </p>
-      {session?.user.name === comment.author ? (
+      {session?.user.name === comment.user.name ? (
         <button
           onClick={() => handleDelete(comment.id)}
           className="absolute text-xl text-red-500 right-4 top-4"

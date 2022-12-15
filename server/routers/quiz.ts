@@ -195,6 +195,14 @@ export const quizRouter = router({
       include: {
         comments: {
           orderBy: { createdAt: "desc" },
+          include: {
+            user: {
+              select: {
+                image: true,
+                name: true,
+              },
+            },
+          },
         },
       },
     });

@@ -48,7 +48,7 @@ export default function QuizPage({
   };
 
   const { mutate: addComment } = trpc.comment.addComment.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => (refetch(), resetField("content")),
     onError: (error) => toast.error(error.message),
   });
   const onSubmit = async (data: Comment) => {
@@ -69,15 +69,14 @@ export default function QuizPage({
     register,
     handleSubmit,
     setValue,
+    resetField,
     formState: { errors },
   } = useForm<Comment>({
     resolver: zodResolver(commentSchema),
   });
   useEffect(() => {
-    if (session && session.user.name) {
-      setValue("author", session.user.name);
+    if (session) {
       setValue("authorId", session.user.id);
-      setValue("authorAvatar", session.user.image || undefined);
       setValue("quizId", quiz.id);
     }
   }, [quiz.id, session, setValue]);

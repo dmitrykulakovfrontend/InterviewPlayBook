@@ -10,10 +10,8 @@ export const commentRouter = router({
       const comment = await ctx.prisma.comment.create({
         data: {
           content: input.content,
-          author: input.author,
           user: { connect: { id: input.authorId } },
           quiz: { connect: { id: input.quizId } },
-          authorAvatar: input.authorAvatar,
         },
       });
       if (comment) {
