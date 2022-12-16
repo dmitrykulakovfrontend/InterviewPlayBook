@@ -26,7 +26,7 @@ export default function Quizzes({
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content={logo} />
       </Head>
-      <div className="w-4/5 min-h-[80vh]   border-t border-gray-200 shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
+      <div className="w-4/5 min-h-[80vh]   border-t border-gray-200 shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12 mt-8 ">
         <h2 className="text-4xl font-bold">Select Topic</h2>
         <span className="text-xl text-gray-500">Latest</span>
         <div className="flex flex-wrap justify-center gap-8 max-sm:gap-4">

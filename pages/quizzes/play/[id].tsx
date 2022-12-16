@@ -103,7 +103,7 @@ export default function QuizPlay({
             {results.map((result, i) => (
               <div
                 key={i}
-                className={`w-full flex flex-col gap-4  text-center font-bold text-lg p-4 rounded-xl whitespace-pre-wrap border-2  shadow-md ${
+                className={`w-full flex flex-col gap-4 break-words  text-center font-bold text-lg p-4 rounded-xl whitespace-pre-wrap border-2  shadow-md ${
                   result.correct
                     ? "shadow-green-500 border-green-500"
                     : "shadow-red-500 border-red-500"
@@ -161,7 +161,7 @@ export default function QuizPlay({
         </title>
         <meta name="description" content={question.text} />
       </Head>
-      <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
+      <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex  mt-8  flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
         <h2 className="w-4/5 text-4xl font-bold text-center break-words whitespace-pre-wrap max-md:text-xl">
           {question.text}
         </h2>

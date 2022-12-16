@@ -94,7 +94,7 @@ export default function QuizPage({
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content={quiz.icon} />
       </Head>
-      <div className="w-4/5 min-h-[80vh] mt-8 border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12  max-lg:items-center">
+      <div className="w-4/5 min-h-[80vh]  mt-8  border-t border-gray-200 flex flex-col gap-4  shadow-xl rounded-3xl p-6 bg-white max-sm:p-3 max-sm:w-11/12  max-lg:items-center">
         <h2 className="text-4xl font-bold">{quiz.name}</h2>
         <div className="flex justify-start gap-12 max-lg:flex-col">
           <Image

@@ -71,7 +71,7 @@ export default function SignIn() {
           content="https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg"
         />
       </Head>
-      <div className="xs:p-0 md:max-w-md">
+      <div className="xs:p-0 md:max-w-md mt-8 ">
         <Link href="/" className="flex flex-col items-center justify-center">
           <Image
             src={logoIcon}

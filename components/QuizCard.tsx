@@ -16,16 +16,14 @@ export default function QuizCard({
 }: QuizCardProps) {
   return (
     <div className="max-w-md flex-1 basis-72 min-h-[300px] flex flex-col justify-between relative py-4 px-8 bg-white shadow-lg rounded-lg">
-      <div className="absolute right-0 -top-5">
-        <Image
-          className="object-cover w-20 h-20 border-2 border-indigo-500 rounded-full"
-          src={src}
-          alt="Quiz icon"
-          width={80}
-          height={80}
-        />
-      </div>
-      <div className="w-10/12">
+      <Image
+        className="absolute right-0 object-cover w-20 h-20 border-2 border-indigo-500 rounded-full -top-5 max-sm:static max-sm:mx-auto"
+        src={src}
+        alt="Quiz icon"
+        width={80}
+        height={80}
+      />
+      <div className="w-10/12 max-sm:text-center max-sm:w-full">
         <h2 className="text-3xl font-semibold text-gray-800">{title}</h2>
         <p className="mt-2 text-gray-600">{description}</p>
       </div>

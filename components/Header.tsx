@@ -79,13 +79,13 @@ export default function Header() {
             <>
               <Link
                 href="/auth/signin"
-                className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100"
+                className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100 max-sm:px-2 max-sm:py-1"
               >
                 <span className="text-sm font-medium">Sign in</span>
               </Link>
               <Link
                 href="/auth/signup"
-                className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100"
+                className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100 max-sm:px-2 max-sm:py-1"
               >
                 <span className="text-sm font-medium">Sign Up</span>
               </Link>
@@ -148,7 +148,7 @@ export default function Header() {
                 signOut({ redirect: false });
                 router.push("/");
               }}
-              className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100"
+              className="flex items-center px-4 py-2 ml-2 border rounded-md cursor-pointer gap-x-1 hover:bg-gray-100 max-sm:px-2 max-sm:py-1 "
             >
               <span className="text-sm font-medium">Sign Out</span>
             </button>
