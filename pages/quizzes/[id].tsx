@@ -184,12 +184,15 @@ export default function QuizPage({
               <p className="text-red-500">{errors.content.message as string}</p>
             )}
             <textarea
-              className="w-full h-20 px-3 py-2 mt-2 mb-2 font-medium leading-normal placeholder-gray-700 bg-gray-100 border border-gray-400 rounded resize-none md:w-fullw-full focus:outline-none focus:bg-white"
+              className={`w-full h-20 px-3 py-2 mt-2 mb-2 font-medium leading-normal placeholder-gray-700 bg-gray-100 border border-gray-400 rounded resize-none md:w-fullw-full focus:outline-none focus:bg-white ${
+                !session ? "hover:cursor-not-allowed" : ""
+              }`}
               {...register("content")}
               placeholder="Type Your Comment"
               required
               disabled={!session}
-            ></textarea>
+              title={!session ? "Authentincating required" : undefined}
+            />
             <div className="flex items-start justify-between w-full gap-4 px-3 md:w-full max-sm:flex-col max-sm:items-center">
               <div className="flex items-center px-2 text-gray-700">
                 <FontAwesomeIcon className="w-5 h-5 mr-1" icon={faCircleInfo} />

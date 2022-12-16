@@ -108,7 +108,7 @@ export default function QuizForm({
             <div className="flex items-center justify-end w-full gap-4 mb-1">
               <h3>Question {index + 1}</h3>
               <button
-                className="inline-block px-3 py-2 text-sm font-semibold text-center text-white transition duration-200 bg-red-500 rounded-lg shadow-sm  w-fit hover:bg-red-600 focus:bg-red-700 focus:shadow-sm focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 hover:shadow-md"
+                className="inline-block px-3 py-2 text-sm font-semibold text-center text-white transition duration-200 bg-red-500 rounded-lg shadow-sm w-fit hover:bg-red-600 focus:bg-red-700 focus:shadow-sm focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 hover:shadow-md"
                 onClick={() => remove(index)}
               >
                 <FontAwesomeIcon icon={faClose} />
@@ -121,6 +121,7 @@ export default function QuizForm({
               placeholder="Question"
               error={errors.questions && errors.questions[index]?.text?.message}
               label="Question"
+              textarea
             />
             <Input
               name={`questions.${index}.answer`}
@@ -128,18 +129,20 @@ export default function QuizForm({
               register={register}
               required
               label="Answer"
+              textarea
               error={
                 errors.questions && errors.questions[index]?.answer?.message
               }
             />
             {item.choices.map((choice, choiceIndex) => (
               <Input
-                key={choice}
+                key={choiceIndex}
                 name={`questions.${index}.choices.${choiceIndex}`}
                 placeholder={`Choice ${choiceIndex + 1}`}
                 register={register}
                 required
                 label={`Choice ${choiceIndex + 1}`}
+                textarea
                 error={
                   errors.questions && errors.questions[index]?.choices?.message
                 }
@@ -164,7 +167,7 @@ export default function QuizForm({
             <button
               type="button"
               onClick={() => {
-                append({ text: "", answer: "", choices: ["", "", "", ""] });
+                append({ text: "", answer: "", choices: ["", "", ""] });
               }}
               className="inline-block px-5 py-3 text-sm font-semibold text-center text-white transition duration-200 bg-blue-500 rounded-lg shadow-sm w-fit hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 hover:shadow-md"
             >

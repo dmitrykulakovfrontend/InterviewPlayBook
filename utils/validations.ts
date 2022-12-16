@@ -26,11 +26,7 @@ export const quizSchema = z.object({
   icon: z.any(),
   questions: z
     .object({
-      text: z
-        .string()
-        .trim()
-        .min(5)
-        .endsWith("?", { message: "Question must end with question mark" }),
+      text: z.string().trim().min(5),
       answer: z.string().trim(),
       choices: z.string().trim().array(),
     })
