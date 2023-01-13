@@ -5,12 +5,32 @@ import Layout from "components/Layout";
 import QuizCard from "components/QuizCard";
 
 import prisma from "utils/prisma";
+import { apiResponseSchema } from "../utils/validations";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchQuizzes = async () => {
+  const res = await fetch(`https://quizapi.io/api/v1/questions?limit=10`, {
+    headers: {
+      "X-Api-Key": "LDfSjagSXrHmVV9By2sSC32M7uVVJ4pDO05XxEw3",
+    },
+  });
+  const data = await res.json();
+  return apiResponseSchema.parse(data);
+};
 
 export default function Quizzes({
   quizzes,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const logo =
     "https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg";
+
+  const { data } = useQuery({
+    queryKey: ["quizzes"],
+    queryFn: fetchQuizzes,
+  });
+
+  console.log(data);
+
   return (
     <Layout>
       <Head>
