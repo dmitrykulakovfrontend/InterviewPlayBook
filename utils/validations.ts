@@ -69,6 +69,33 @@ export const commentSchema = z.object({
   authorId: z.string(),
 });
 
+export const answersSchema = z
+  .object({
+    answer_a: z.string().nullable().optional(),
+    answer_b: z.string().nullable().optional(),
+    answer_c: z.string().nullable().optional(),
+    answer_d: z.string().nullable().optional(),
+    answer_e: z.string().nullable().optional(),
+    answer_f: z.string().nullable().optional(),
+  })
+  .nullable();
+
+export const questionSchema = z.object({
+  id: z.number(),
+  question: z.string(),
+  description: z.string().nullable(),
+  answers: answersSchema,
+  correct_answer: z.string().nullable(),
+  correct_answers: answersSchema,
+  explanation: z.string().nullable(),
+  tip: z.string().nullable(),
+  tags: z.array(z.object({ name: z.string() })),
+  category: z.string(),
+  difficulty: z.string(),
+});
+
+export const apiResponseSchema = z.array(questionSchema);
+
 export type UserSettings = z.infer<typeof userSettingsSchema>;
 export type SignIn = z.infer<typeof signInSchema>;
 export type SignUp = z.infer<typeof signUpSchema>;
@@ -77,3 +104,4 @@ export type UpdateQuiz = z.infer<typeof updateQuizSchema>;
 export type UserResults = z.infer<typeof userResultsSchema>;
 export type UserLike = z.infer<typeof userLikeSchema>;
 export type Comment = z.infer<typeof commentSchema>;
+export type apiResponseSchema = z.infer<typeof apiResponseSchema>;
