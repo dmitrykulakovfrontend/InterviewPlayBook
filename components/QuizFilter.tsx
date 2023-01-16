@@ -20,7 +20,7 @@ export default function QuizFilter({
           onChange={(e) =>
             updateFilter({ ...userFilter, category: e.target.value })
           }
-          className="w-32 p-1 mt-1 border"
+          className="w-32 p-1 mt-1 border shadow-inner"
         >
           <option value="Linux">Linux</option>
           <option value="DevOps">DevOps</option>
@@ -37,13 +37,30 @@ export default function QuizFilter({
           onChange={(e) =>
             updateFilter({ ...userFilter, limit: +e.target.value })
           }
-          className="w-32 p-1 mt-1 border"
+          className="w-32 p-1 mt-1 border shadow-inner"
         >
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
           <option value="20">20</option>
-          <option value="25">25</option>
+        </select>
+      </label>
+      <label className="flex flex-col">
+        Difficulty
+        <select
+          name="limit"
+          value={userFilter.difficulty}
+          onChange={(e) =>
+            updateFilter({
+              ...userFilter,
+              difficulty: e.target.value as Filter["difficulty"],
+            })
+          }
+          className="w-32 p-1 mt-1 border shadow-inner"
+        >
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
         </select>
       </label>
     </form>

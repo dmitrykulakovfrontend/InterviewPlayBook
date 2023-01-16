@@ -4,7 +4,7 @@ import DefaultIcon from "./DefaultIcon";
 
 type QuizCardProps = {
   title: string;
-  description: string;
+  description?: string;
   src?: string;
   href: string;
 };
