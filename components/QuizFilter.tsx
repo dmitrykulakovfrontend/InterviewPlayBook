@@ -11,7 +11,7 @@ export default function QuizFilter({
   updateFilter,
 }: QuizFilterProps) {
   return (
-    <form className="flex w-full gap-4 py-4 mb-8">
+    <form className="flex flex-wrap justify-center w-full gap-4 py-4 mb-8">
       <label className="flex flex-col">
         Category
         <select

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Skeleton from "react-loading-skeleton";
 import DefaultIcon from "./DefaultIcon";
 
 type QuizCardProps = {

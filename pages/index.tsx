@@ -5,77 +5,13 @@ import Layout from "components/Layout";
 import QuizCard from "components/QuizCard";
 
 import prisma from "utils/prisma";
-import { apiResponseSchema } from "../utils/validations";
-import { useQuery } from "@tanstack/react-query";
-import QuizFilter from "components/QuizFilter";
-import { useState } from "react";
-import { Filter } from "types/filter";
+import RandomQuizzes from "components/RandomQuizzes";
 
 export default function Quizzes({
   quizzes,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const logo =
     "https://res.cloudinary.com/dygvw4rwl/image/upload/v1669356857/IPB/IPBlogo.svg";
-
-  const [userFilter, setUserFilter] = useState<Filter>({
-    category: "Code",
-    limit: 10,
-    difficulty: "Medium",
-  });
-
-  const fetchRandomQuizzes = async () => {
-    // https://random-word-form.herokuapp.com/random/adjective?count=5
-
-    const urls = [];
-
-    urls.push(
-      `https://random-word-form.herokuapp.com/random/adjective?count=5`
-    );
-
-    // https://random.imagecdn.app/v1/image?width=500&height=150&category=buildings
-    for (let i = 0; i < 5; i++) {
-      urls.push(`https://random.imagecdn.app/v1/image?width=80&height=80`);
-    }
-    const data = await Promise.all(
-      urls.map(async (url, i) => {
-        const resp = await fetch(url);
-        return i === 0 ? resp.json() : resp.text();
-      })
-    );
-    console.log(data);
-    const adjective = data.shift();
-
-    const randomQuizzes = [];
-
-    for (let i = 0; i < data.length; i++) {
-      randomQuizzes.push({
-        image: data[i],
-        title: `${
-          adjective[i].slice(0, 1).toUpperCase() + adjective[i].slice(1)
-        } ${userFilter.category} Quizz`,
-      });
-    }
-    return randomQuizzes;
-
-    // const res = await fetch(
-    //   `https://quizapi.io/api/v1/questions?category=${userFilter.category}&limit=${userFilter.limit}`,
-    //   {
-    //     headers: {
-    //       "X-Api-Key": "LDfSjagSXrHmVV9By2sSC32M7uVVJ4pDO05XxEw3",
-    //     },
-    //   }
-    // );
-    // const data = await res.json();
-    // return apiResponseSchema.parse(data);
-  };
-
-  const { data: randomQuizzes } = useQuery({
-    queryKey: ["quizzes", userFilter],
-    queryFn: fetchRandomQuizzes,
-    refetchOnWindowFocus: false,
-  });
-
-  console.log(randomQuizzes);
 
   return (
     <Layout>
@@ -109,20 +45,7 @@ export default function Quizzes({
             />
           ))}
         </div>
-        <h2 className="p-2 my-8 text-3xl font-bold text-center border-b">
-          Random Quizzes
-        </h2>
-        <QuizFilter userFilter={userFilter} updateFilter={setUserFilter} />
-        <div className="flex flex-wrap justify-center gap-8 max-sm:gap-4">
-          {randomQuizzes?.map((quiz, i) => (
-            <QuizCard
-              key={i}
-              href={`/quizzes/${i}`}
-              title={quiz.title}
-              src={quiz.image}
-            />
-          ))}
-        </div>
+        <RandomQuizzes />
       </div>
     </Layout>
   );
