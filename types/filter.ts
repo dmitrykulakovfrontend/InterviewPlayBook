@@ -1,5 +1,5 @@
 export type Filter = {
   category: string;
-  limit: number;
+  limit: string;
   difficulty: "Easy" | "Medium" | "Hard";
 };

@@ -12,20 +12,20 @@ type RandomQuizzesProps = {};
 export default function RandomQuizzes({}: RandomQuizzesProps) {
   const [userFilter, setUserFilter] = useState<Filter>({
     category: "Code",
-    limit: 10,
+    limit: "10",
     difficulty: "Medium",
   });
 
   const {
     data: randomQuizzes,
-    isLoading,
     isSuccess,
     isFetching,
   } = useQuery({
     queryKey: ["quizzes", userFilter],
-    queryFn: () => fetchRandomQuizzes(userFilter.category),
+    queryFn: fetchRandomQuizzes,
     refetchOnWindowFocus: false,
     retry: false,
+    staleTime: Infinity,
     onError: (err) => {
       console.error(err);
       toast("Random Quizzes is not available :(", { type: "error" });

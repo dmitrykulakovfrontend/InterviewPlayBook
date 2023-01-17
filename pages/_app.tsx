@@ -9,6 +9,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import { Analytics } from "@vercel/analytics/react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 config.autoAddCss = false;
 
 const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <ToastContainer position={"top-center"} autoClose={2000} />
         <Component {...pageProps} />
+        <ReactQueryDevtools />
         <Analytics />
       </QueryClientProvider>
     </SessionProvider>

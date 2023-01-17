@@ -1,6 +1,12 @@
+import { QueryFunctionContext } from "@tanstack/react-query";
+import { Filter } from "types/filter";
+
 const QUIZ_AMOUNT = 5;
 
-export const fetchRandomQuizzes = async (category: string) => {
+export const fetchRandomQuizzes = async ({
+  queryKey: [type, userFilter],
+  signal,
+}: QueryFunctionContext<[string, Filter]>) => {
   const urls = [];
 
   urls.push(
@@ -12,7 +18,7 @@ export const fetchRandomQuizzes = async (category: string) => {
   }
 
   const fetchPromises = urls.map(async (url, i) => {
-    return fetch(url);
+    return fetch(url, { signal });
   });
 
   const responses = await Promise.all(fetchPromises);
@@ -35,7 +41,7 @@ export const fetchRandomQuizzes = async (category: string) => {
       image: data[i],
       title: `${
         adjectives[i].slice(0, 1).toUpperCase() + adjectives[i].slice(1)
-      } ${category} Quizz`,
+      } ${userFilter.category} Quizz`,
     });
   }
   return randomQuizzes;

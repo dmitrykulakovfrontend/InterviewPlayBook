@@ -1,3 +1,5 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { Filter } from "types/filter";
 
@@ -10,6 +12,11 @@ export default function QuizFilter({
   userFilter,
   updateFilter,
 }: QuizFilterProps) {
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    updateFilter({ ...userFilter, [e.target.name]: e.target.value });
+    queryClient.invalidateQueries({ queryKey: ["quizzes"] });
+  };
+  const queryClient = useQueryClient();
   return (
     <form className="flex flex-wrap justify-center w-full gap-4 py-4 mb-8">
       <label className="flex flex-col">
@@ -17,9 +24,7 @@ export default function QuizFilter({
         <select
           name="category"
           value={userFilter.category}
-          onChange={(e) =>
-            updateFilter({ ...userFilter, category: e.target.value })
-          }
+          onChange={handleChange}
           className="w-32 p-1 mt-1 border shadow-inner"
         >
           <option value="Linux">Linux</option>
@@ -34,9 +39,7 @@ export default function QuizFilter({
         <select
           name="limit"
           value={userFilter.limit}
-          onChange={(e) =>
-            updateFilter({ ...userFilter, limit: +e.target.value })
-          }
+          onChange={handleChange}
           className="w-32 p-1 mt-1 border shadow-inner"
         >
           <option value="5">5</option>
@@ -48,14 +51,9 @@ export default function QuizFilter({
       <label className="flex flex-col">
         Difficulty
         <select
-          name="limit"
+          name="difficulty"
           value={userFilter.difficulty}
-          onChange={(e) =>
-            updateFilter({
-              ...userFilter,
-              difficulty: e.target.value as Filter["difficulty"],
-            })
-          }
+          onChange={handleChange}
           className="w-32 p-1 mt-1 border shadow-inner"
         >
           <option value="Easy">Easy</option>
