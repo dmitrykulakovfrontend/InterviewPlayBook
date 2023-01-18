@@ -12,9 +12,10 @@ export const fetchRandomQuizzes = async ({
   urls.push(
     `https://random-word-form.herokuapp.com/random/adjective?count=${QUIZ_AMOUNT}`
   );
-
+  // https://random.imagecdn.app/v1/image?width=80&height=80
+  //
   for (let i = 0; i < QUIZ_AMOUNT; i++) {
-    urls.push(`https://random.imagecdn.app/v1/image?width=80&height=80`);
+    urls.push("https://picsum.photos/80");
   }
 
   const fetchPromises = urls.map(async (url, i) => {
@@ -27,7 +28,7 @@ export const fetchRandomQuizzes = async ({
     if (!resp.ok) {
       throw new Error("Network response was not ok");
     }
-    return i === 0 ? resp.json() : resp.text();
+    return i === 0 ? resp.json() : resp.url;
   });
 
   const data = await Promise.all(responsesPromises);
