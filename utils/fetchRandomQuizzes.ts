@@ -46,15 +46,4 @@ export const fetchRandomQuizzes = async ({
     });
   }
   return randomQuizzes;
-
-  // const res = await fetch(
-  //   `https://quizapi.io/api/v1/questions?category=${userFilter.category}&limit=${userFilter.limit}`,
-  //   {
-  //     headers: {
-  //       "X-Api-Key": "LDfSjagSXrHmVV9By2sSC32M7uVVJ4pDO05XxEw3",
-  //     },
-  //   }
-  // );
-  // const data = await res.json();
-  // return apiResponseSchema.parse(data);
 };

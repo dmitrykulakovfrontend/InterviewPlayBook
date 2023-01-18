@@ -1,13 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
 import Skeleton from "react-loading-skeleton";
+import { Url } from "url";
 import DefaultIcon from "./DefaultIcon";
 
 type QuizCardProps = {
   title: string;
   description?: string;
   src?: string;
-  href: string;
+  href: Partial<Url> | string;
 };
 
 export default function QuizCard({

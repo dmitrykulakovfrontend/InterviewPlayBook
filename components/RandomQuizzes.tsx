@@ -84,7 +84,13 @@ export default function RandomQuizzes({}: RandomQuizzesProps) {
           randomQuizzes.map((quiz, i) => (
             <QuizCard
               key={i}
-              href={`/quizzes/${i}`}
+              href={{
+                pathname: `/random/${quiz.title.replace(/ /g, "-")}`,
+                query: {
+                  category: userFilter.category,
+                  limit: userFilter.limit,
+                },
+              }}
               title={quiz.title}
               src={quiz.image}
             />

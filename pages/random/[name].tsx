@@ -1,72 +1,109 @@
-import Head from "next/head";
+import { useQuery } from "@tanstack/react-query";
 import Layout from "components/Layout";
-import prisma from "utils/prisma";
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { trpc } from "utils/trpc";
-import { ParsedUrlQuery } from "querystring";
-import { Question } from "@prisma/client";
 import { Results } from "types/results";
+import { Question } from "utils/validations";
+import { fetchQuestions } from "../../utils/fetchQuestions";
 
-export default function QuizPlay({
-  questions,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export type RandomQuizProps = {};
+
+export default function RandomQuiz(props: RandomQuizProps) {
+  const { query } = useRouter();
+  const { data: questions } = useQuery({
+    queryFn: (e) => fetchQuestions(query, e.signal),
+    queryKey: ["questions", query],
+    staleTime: Infinity,
+    retry: false,
+  });
+
+  console.log(questions);
+
+  const [currentQuestion, setCurrentQuestion] = useState<Question | undefined>(
+    undefined
+  );
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
-  const [selectedQuestion, setSelectedQuestion] = useState(-1);
+  const [selectedQuestion, setSelectedQuestion] = useState<
+    [string | null, string | null]
+  >([null, null]);
   const [results, setResults] = useState<Results>([]);
-  const [questionChoices, setQuestionChoices] = useState<string[]>([]);
-
-  const question = questions[currentQuestionIndex];
+  const [isFinished, setIsFinished] = useState(false);
+  const [answer, setAnswer] = useState<(string | null | undefined)[]>([""]);
 
   useEffect(() => {
-    setQuestionChoices(shuffleArray([...question.choices, question.answer]));
-  }, [question]);
-
-  const { mutate: completeQuiz } = trpc.quiz.complete.useMutation();
+    console.log({
+      isFinished,
+      results,
+      selectedQuestion,
+      currentQuestionIndex,
+      currentQuestion,
+    });
+  }, [
+    isFinished,
+    results,
+    selectedQuestion,
+    currentQuestionIndex,
+    currentQuestion,
+  ]);
 
   const nextQuestion = () => {
-    let userAnswer = questionChoices[selectedQuestion];
-    let isCorrect = userAnswer === question.answer;
-    if (isCorrect) {
-      setResults([
-        ...results,
-        {
-          correct: true,
-          userAnswer,
-          id: question.id,
-        },
-      ]);
-    } else {
-      setResults([
-        ...results,
-        {
-          correct: false,
-          userAnswer,
-          id: question.id,
-        },
-      ]);
-    }
-    let isFinalQuestion = currentQuestionIndex + 1 >= questions.length;
+    if (!currentQuestion) return;
+    const isCorrect = answer.includes(selectedQuestion[1]);
+
+    setResults([
+      ...results,
+      {
+        correct: isCorrect,
+        userAnswer: selectedQuestion[1]!,
+        id: currentQuestion.question,
+      },
+    ]);
+
+    if (!query.limit) return;
+
+    let isFinalQuestion = currentQuestionIndex + 1 >= +query.limit;
+
     if (isFinalQuestion) {
       setIsFinished(true);
-      completeQuiz({ results, quizId: questions[0].quizId });
     } else {
-      setCurrentQuestionIndex((prev) => prev + 1);
-      setSelectedQuestion(-1);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedQuestion([null, null]);
     }
   };
 
-  function shuffleArray(array: string[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+  useEffect(() => {
+    if (!questions) return;
+    const question = questions[currentQuestionIndex];
+    setCurrentQuestion(question);
 
-  if (isFinished)
+    for (let [key, value] of Object.entries(question.correct_answers)) {
+      if (value === "true") {
+        if (key === "answer_a_correct") {
+          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_a]);
+        } else if (key === "answer_b_correct") {
+          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_b]);
+        } else if (key === "answer_c_correct") {
+          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_c]);
+        } else if (key === "answer_d_correct") {
+          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_d]);
+        } else if (key === "answer_e_correct") {
+          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_e]);
+        } else if (key === "answer_f_correct") {
+          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_f]);
+        }
+      }
+    }
+  }, [questions, currentQuestionIndex, currentQuestion]);
+
+  if (!currentQuestion) return "Loading...";
+
+  const choices = Object.entries(currentQuestion.answers).filter(
+    (entry) => entry[1]
+  );
+
+  if (isFinished && questions)
     return (
       <Layout>
         <Head>
@@ -104,7 +141,7 @@ export default function QuizPlay({
                     : "shadow-red-500 border-red-500"
                 }`}
               >
-                <p>{questions[i].text}</p>
+                <p>{questions[i].question}</p>
                 <div>
                   <p
                     className={`${
@@ -115,21 +152,12 @@ export default function QuizPlay({
                   </p>
                   {!result.correct ? (
                     <p className="text-green-500">
-                      Correct answer: {questions[i].answer}
+                      Correct answer: {answer.join(", ")}
                     </p>
                   ) : (
                     ""
                   )}
                 </div>
-                <p>
-                  People answer on that question correctly in:{" "}
-                  {(
-                    (questions[i].answeredCorrectly /
-                      (questions[i].answeredCorrectly +
-                        questions[i].answeredIncorrectly)) *
-                      100 || 0
-                  ).toFixed(2) + "%"}
-                </p>
               </div>
             ))}
             <p className="mx-auto">
@@ -151,25 +179,25 @@ export default function QuizPlay({
   return (
     <Layout>
       <Head>
-        <title>
-          {`${currentQuestionIndex + 1} / ${questions.length} Questions`}
-        </title>
-        <meta name="description" content={question.text} />
+        <title>{`${currentQuestionIndex + 1} / ${
+          query.limit
+        } Questions`}</title>
+        <meta name="description" content={currentQuestion?.question} />
       </Head>
       <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex  mt-8  flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
         <h2 className="w-4/5 text-4xl font-bold text-center break-words whitespace-pre-wrap max-md:text-xl">
-          {question.text}
+          {currentQuestion?.question}
         </h2>
-        <div className="flex flex-wrap w-4/5 gap-4 p-4 border rounded-lg shadow-lg">
-          {questionChoices.map((text, i) => (
+        <div className="flex flex-wrap justify-center w-4/5 gap-4 p-4 border rounded-lg shadow-lg">
+          {choices.map(([key, answer]) => (
             <button
-              onClick={() => setSelectedQuestion(i)}
+              onClick={() => setSelectedQuestion([key, answer])}
               className={`w-[calc(50%_-_16px)] text-center break-words p-4 border rounded-lg shadow-md cursor-pointer transition hover:-translate-y-1 active:-translate-y-0 hover:shadow-lg max-lg:w-full ${
-                selectedQuestion === i ? "bg-green-500" : ""
+                selectedQuestion[1] === answer ? "bg-green-500" : ""
               }`}
-              key={text}
+              key={answer}
             >
-              {text}
+              {answer}
             </button>
           ))}
         </div>
@@ -183,49 +211,3 @@ export default function QuizPlay({
     </Layout>
   );
 }
-
-interface Params extends ParsedUrlQuery {
-  id: string;
-}
-
-export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const quizzes = await prisma.quiz.findMany();
-  const paths = quizzes.map(({ id }) => {
-    return {
-      params: {
-        id,
-      },
-    };
-  });
-  return {
-    paths,
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps<
-  { questions: Question[] },
-  Params
-> = async ({ params }) => {
-  let questions;
-  try {
-    questions = await prisma.question.findMany({
-      where: {
-        quizId: params?.id,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    return {
-      notFound: true,
-    };
-  }
-
-  // fixes problem with not serializable Date object
-  questions = JSON.parse(JSON.stringify(questions));
-  return {
-    props: {
-      questions,
-    },
-  };
-};

@@ -69,28 +69,35 @@ export const commentSchema = z.object({
   authorId: z.string(),
 });
 
-export const answersSchema = z
-  .object({
-    answer_a: z.string().nullable().optional(),
-    answer_b: z.string().nullable().optional(),
-    answer_c: z.string().nullable().optional(),
-    answer_d: z.string().nullable().optional(),
-    answer_e: z.string().nullable().optional(),
-    answer_f: z.string().nullable().optional(),
-  })
-  .nullable();
+export const answersSchema = z.object({
+  answer_a: z.string().nullable(),
+  answer_b: z.string().nullable(),
+  answer_c: z.string().nullable(),
+  answer_d: z.string().nullable(),
+  answer_e: z.string().nullable(),
+  answer_f: z.string().nullable(),
+});
+
+export const correctAnswersSchema = z.object({
+  answer_a_correct: z.enum(["false", "true"]),
+  answer_b_correct: z.enum(["false", "true"]),
+  answer_c_correct: z.enum(["false", "true"]),
+  answer_d_correct: z.enum(["false", "true"]),
+  answer_e_correct: z.enum(["false", "true"]),
+  answer_f_correct: z.enum(["false", "true"]),
+});
 
 export const questionSchema = z.object({
   id: z.number(),
   question: z.string(),
   description: z.string().nullable(),
   answers: answersSchema,
-  correct_answer: z.string().nullable(),
-  correct_answers: answersSchema,
+  correct_answers: correctAnswersSchema,
   explanation: z.string().nullable(),
   tip: z.string().nullable(),
   tags: z.array(z.object({ name: z.string() })),
   category: z.string(),
+  multiple_correct_answers: z.string(),
   difficulty: z.string(),
 });
 
@@ -104,4 +111,5 @@ export type UpdateQuiz = z.infer<typeof updateQuizSchema>;
 export type UserResults = z.infer<typeof userResultsSchema>;
 export type UserLike = z.infer<typeof userLikeSchema>;
 export type Comment = z.infer<typeof commentSchema>;
-export type apiResponseSchema = z.infer<typeof apiResponseSchema>;
+export type Question = z.infer<typeof questionSchema>;
+export type ApiResponse = z.infer<typeof apiResponseSchema>;
