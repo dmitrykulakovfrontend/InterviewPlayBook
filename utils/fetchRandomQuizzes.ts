@@ -12,10 +12,11 @@ export const fetchRandomQuizzes = async ({
   urls.push(
     `https://random-word-form.herokuapp.com/random/adjective?count=${QUIZ_AMOUNT}`
   );
-  // https://random.imagecdn.app/v1/image?width=80&height=80
-  //
+
   for (let i = 0; i < QUIZ_AMOUNT; i++) {
-    urls.push("https://picsum.photos/80");
+    urls.push(
+      "https://random.imagecdn.app/v1/image?width=80&height=80&format=image"
+    );
   }
 
   const fetchPromises = urls.map(async (url, i) => {
@@ -32,6 +33,7 @@ export const fetchRandomQuizzes = async ({
   });
 
   const data = await Promise.all(responsesPromises);
+  console.log({ data });
 
   const adjectives = data.shift();
 
@@ -46,4 +48,15 @@ export const fetchRandomQuizzes = async ({
     });
   }
   return randomQuizzes;
+
+  // const res = await fetch(
+  //   `https://quizapi.io/api/v1/questions?category=${userFilter.category}&limit=${userFilter.limit}`,
+  //   {
+  //     headers: {
+  //       "X-Api-Key": "LDfSjagSXrHmVV9By2sSC32M7uVVJ4pDO05XxEw3",
+  //     },
+  //   }
+  // );
+  // const data = await res.json();
+  // return apiResponseSchema.parse(data);
 };
