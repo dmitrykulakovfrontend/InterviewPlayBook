@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Results } from "types/results";
 import { Question } from "utils/validations";
 import { fetchQuestions } from "../../utils/fetchQuestions";
+import Skeleton from "react-loading-skeleton";
 
 export type RandomQuizProps = {};
 
@@ -31,6 +32,7 @@ export default function RandomQuiz(props: RandomQuizProps) {
   const [results, setResults] = useState<Results>([]);
   const [isFinished, setIsFinished] = useState(false);
   const [answer, setAnswer] = useState<(string | null | undefined)[]>([""]);
+  console.log(answer);
 
   useEffect(() => {
     console.log({
@@ -55,6 +57,7 @@ export default function RandomQuiz(props: RandomQuizProps) {
     setResults([
       ...results,
       {
+        correctAnswer: answer,
         correct: isCorrect,
         userAnswer: selectedQuestion[1]!,
         id: currentQuestion.question,
@@ -77,27 +80,52 @@ export default function RandomQuiz(props: RandomQuizProps) {
     if (!questions) return;
     const question = questions[currentQuestionIndex];
     setCurrentQuestion(question);
-
+    const answers = [];
     for (let [key, value] of Object.entries(question.correct_answers)) {
       if (value === "true") {
         if (key === "answer_a_correct") {
-          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_a]);
-        } else if (key === "answer_b_correct") {
-          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_b]);
-        } else if (key === "answer_c_correct") {
-          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_c]);
-        } else if (key === "answer_d_correct") {
-          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_d]);
-        } else if (key === "answer_e_correct") {
-          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_e]);
-        } else if (key === "answer_f_correct") {
-          setAnswer((prev) => [...prev, currentQuestion?.answers.answer_f]);
+          answers.push(currentQuestion?.answers.answer_a);
+        }
+        if (key === "answer_b_correct") {
+          answers.push(currentQuestion?.answers.answer_b);
+        }
+        if (key === "answer_c_correct") {
+          answers.push(currentQuestion?.answers.answer_c);
+        }
+        if (key === "answer_d_correct") {
+          answers.push(currentQuestion?.answers.answer_d);
+        }
+        if (key === "answer_e_correct") {
+          answers.push(currentQuestion?.answers.answer_e);
+        }
+        if (key === "answer_f_correct") {
+          answers.push(currentQuestion?.answers.answer_f);
         }
       }
     }
+    setAnswer(answers);
   }, [questions, currentQuestionIndex, currentQuestion]);
 
-  if (!currentQuestion) return "Loading...";
+  if (!currentQuestion)
+    return (
+      <Layout>
+        <Head>
+          <title>{`${currentQuestionIndex + 1} / ${
+            query.limit
+          } Questions`}</title>
+        </Head>
+        <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex  mt-8  flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
+          <h2 className="w-4/5 text-4xl font-bold text-center break-words whitespace-pre-wrap max-md:text-xl">
+            <Skeleton />
+            <Skeleton height={300} />
+          </h2>
+          <Skeleton
+            width={100}
+            className="px-4 py-2 text-xl font-medium text-indigo-500 transition border rounded-md w-fit hover:-translate-y-1 active:-translate-y-0 hover:shadow-lg"
+          />
+        </div>
+      </Layout>
+    );
 
   const choices = Object.entries(currentQuestion.answers).filter(
     (entry) => entry[1]
@@ -152,7 +180,7 @@ export default function RandomQuiz(props: RandomQuizProps) {
                   </p>
                   {!result.correct ? (
                     <p className="text-green-500">
-                      Correct answer: {answer.join(", ")}
+                      Correct answer(s): {result.correctAnswer.join(" | ")}
                     </p>
                   ) : (
                     ""
@@ -182,7 +210,6 @@ export default function RandomQuiz(props: RandomQuizProps) {
         <title>{`${currentQuestionIndex + 1} / ${
           query.limit
         } Questions`}</title>
-        <meta name="description" content={currentQuestion?.question} />
       </Head>
       <div className="w-4/5 min-h-[80vh] border-t border-gray-200 flex  mt-8  flex-col justify-center items-center gap-4  shadow-xl rounded-xl mb-4 p-6 bg-white max-sm:p-3 max-sm:w-11/12 ">
         <h2 className="w-4/5 text-4xl font-bold text-center break-words whitespace-pre-wrap max-md:text-xl">
