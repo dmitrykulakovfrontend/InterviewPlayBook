@@ -9,6 +9,7 @@ type QuizCardProps = {
   description?: string;
   src?: string;
   href: Partial<Url> | string;
+  unoptimized?: boolean;
 };
 
 export default function QuizCard({
@@ -16,6 +17,7 @@ export default function QuizCard({
   description,
   src,
   href,
+  unoptimized = false,
 }: QuizCardProps) {
   return (
     <div className="max-w-md flex-1 basis-72 min-h-[300px] flex flex-col justify-between relative py-4 px-8 bg-white shadow-lg  rounded-lg">
@@ -26,6 +28,7 @@ export default function QuizCard({
           alt="Quiz icon"
           width={80}
           height={80}
+          unoptimized={unoptimized}
         />
       ) : (
         <DefaultIcon width={80} height={80} />

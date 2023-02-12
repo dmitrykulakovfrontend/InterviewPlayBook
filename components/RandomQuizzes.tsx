@@ -91,6 +91,7 @@ export default function RandomQuizzes({}: RandomQuizzesProps) {
                   limit: userFilter.limit,
                 },
               }}
+              unoptimized={true}
               title={quiz.title}
               src={quiz.image}
             />
