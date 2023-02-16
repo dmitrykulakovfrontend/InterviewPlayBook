@@ -42,6 +42,7 @@ export default function Quizzes({
               title={quiz.name}
               description={quiz.description}
               src={quiz.icon}
+              likes={quiz.usersWhoLikedId.length}
             />
           ))}
         </div>

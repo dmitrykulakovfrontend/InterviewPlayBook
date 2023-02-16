@@ -1,3 +1,5 @@
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link, { LinkProps } from "next/link";
 import Skeleton from "react-loading-skeleton";
@@ -10,6 +12,7 @@ type QuizCardProps = {
   src?: string;
   href: Partial<Url> | string;
   unoptimized?: boolean;
+  likes?: number;
 };
 
 export default function QuizCard({
@@ -18,33 +21,34 @@ export default function QuizCard({
   src,
   href,
   unoptimized = false,
+  likes,
 }: QuizCardProps) {
   return (
-    <div className="max-w-md flex-1 basis-72 min-h-[300px] flex flex-col justify-between relative py-4 px-8 bg-white shadow-lg  rounded-lg">
-      {src ? (
+    <Link
+      href={href}
+      className={`relative block overflow-hidden rounded-xl bottom-0  shadow-xl transition-all duration-500 hover:rotate-3 hover:bottom-2 border`}
+    >
+      {/* {likes && (
+        <span className="absolute z-10 inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold text-white bg-gray-400 rounded-full right-4 top-4">
+          {likes}
+          <FontAwesomeIcon icon={faHeart} className="text-red-400" />
+        </span>
+      )} */}
+
+      <div className="relative min-w-[270px] min-h-[265px] p-8 pt-40 text-white bg-black">
         <Image
-          className="absolute right-0 object-cover w-20 h-20 border-2 border-indigo-500 rounded-full -top-5 max-sm:static max-sm:mx-auto"
-          src={src}
-          alt="Quiz icon"
-          width={80}
-          height={80}
-          unoptimized={unoptimized}
-        />
-      ) : (
-        <DefaultIcon width={80} height={80} />
-      )}
-      <div className="w-10/12 max-sm:text-center max-sm:w-full">
-        <h2 className="text-3xl font-semibold text-gray-800">{title}</h2>
-        <p className="mt-2 text-gray-600">{description}</p>
+          width={400}
+          height={400}
+          src={src ? src : ""}
+          className="absolute top-0 left-0 object-cover w-full h-full opacity-60"
+          alt="background image"
+        ></Image>
+        <h3 className="relative z-10 text-2xl font-bold text-center">
+          {title}
+        </h3>
+
+        <p className="relative z-10 text-sm text-center">{description}</p>
       </div>
-      <div className="flex items-center justify-between mt-4 max-lg:flex-col">
-        <Link
-          href={href}
-          className="px-4 py-2 text-xl font-medium text-indigo-500 border rounded-md w-fit hover:bg-gray-100"
-        >
-          Open
-        </Link>
-      </div>
-    </div>
+    </Link>
   );
 }

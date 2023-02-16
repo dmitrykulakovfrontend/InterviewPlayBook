@@ -15,7 +15,7 @@ export const fetchRandomQuizzes = async ({
 
   for (let i = 0; i < QUIZ_AMOUNT; i++) {
     urls.push(
-      "https://random.imagecdn.app/v1/image?width=80&height=80&format=image"
+      "https://random.imagecdn.app/v1/image?width=400&height=400&format=image"
     );
   }
 
