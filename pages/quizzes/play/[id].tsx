@@ -28,26 +28,15 @@ export default function QuizPlay({
 
   const nextQuestion = () => {
     let userAnswer = questionChoices[selectedQuestion];
-    let isCorrect = userAnswer === question.answer;
-    if (isCorrect) {
-      setResults([
-        ...results,
-        {
-          correct: true,
-          userAnswer,
-          id: question.id,
-        },
-      ]);
-    } else {
-      setResults([
-        ...results,
-        {
-          correct: false,
-          userAnswer,
-          id: question.id,
-        },
-      ]);
-    }
+    setResults([
+      ...results,
+      {
+        correct: userAnswer === question.answer,
+        userAnswer,
+        id: question.id,
+        correctAnswer: [question.answer],
+      },
+    ]);
     let isFinalQuestion = currentQuestionIndex + 1 >= questions.length;
     if (isFinalQuestion) {
       setIsFinished(true);
@@ -115,7 +104,7 @@ export default function QuizPlay({
                   </p>
                   {!result.correct ? (
                     <p className="text-green-500">
-                      Correct answer: {questions[i].answer}
+                      Correct answer: {result.correctAnswer}
                     </p>
                   ) : (
                     ""
