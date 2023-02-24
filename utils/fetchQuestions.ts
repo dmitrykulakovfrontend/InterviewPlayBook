@@ -18,6 +18,5 @@ export const fetchQuestions = async (
     }
   );
   const data = await res.json();
-  console.log("HERE", data);
   return apiResponseSchema.parse(data);
 };

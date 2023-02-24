@@ -32,16 +32,18 @@ export const fetchRandomQuizzes = async ({
     return i === 0 ? resp.json() : resp.url;
   });
 
-  const data = await Promise.all(responsesPromises);
-  console.log({ data });
+  type Data = [string[], ...Array<string>];
+
+  const data = (await Promise.all(responsesPromises)) as Data;
 
   const adjectives = data.shift();
+  if (!adjectives) throw new Error("No adjectives");
 
   const randomQuizzes = [];
 
   for (let i = 0; i < data.length; i++) {
     randomQuizzes.push({
-      image: data[i],
+      image: data[i] as string,
       title: `${
         adjectives[i].slice(0, 1).toUpperCase() + adjectives[i].slice(1)
       } ${userFilter.category} Quizz`,
