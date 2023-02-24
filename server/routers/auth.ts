@@ -107,3 +107,5 @@ export const authRouter = router({
     };
   }),
 });
+
+export type AuthRouter = typeof authRouter;
