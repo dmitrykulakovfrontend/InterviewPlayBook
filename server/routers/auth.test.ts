@@ -4,23 +4,41 @@
 import { createContextInner } from "../context";
 import { appRouter, AppRouter } from "./_app";
 import { inferProcedureInput } from "@trpc/server";
+import prisma from "utils/prisma";
+import { fail } from "assert";
 
-test("add and get post", async () => {
+const userInput: inferProcedureInput<AppRouter["auth"]["signUp"]> = {
+  email: "test@example.com",
+  password: "passwordtest",
+  name: "testUserName",
+};
+
+describe("Testing auth routes", async () => {
   const ctx = await createContextInner({});
   const caller = appRouter.createCaller(ctx);
+  test("Create user", async () => {
+    const post = await caller.auth.signUp(userInput);
+    const expected = {
+      status: 201,
+      message: "Account created successfully",
+      result: "test@example.com",
+    };
 
-  const input: inferProcedureInput<AppRouter["auth"]["signUp"]> = {
-    email: "test@example.com",
-    password: "passwordtest",
-    name: "testUserName",
-  };
+    expect(post).toMatchObject(expected);
+  });
+  test("Make sure user in database with same properties", async () => {
+    const createdUser = await prisma.user.findFirst({
+      where: { email: userInput.email },
+    });
+    if (!createdUser) {
+      fail("User not found");
+      return;
+    }
+    expect(createdUser.name).toBe(userInput.name);
+    expect(createdUser.email).toBe(userInput.email);
+  });
+});
 
-  const post = await caller.auth.signUp(input);
-  const expected = {
-    status: 201,
-    message: "Account created successfully",
-    result: "test@example.com",
-  };
-
-  expect(post).toMatchObject(expected);
+afterAll(async () => {
+  await prisma.user.delete({ where: { email: userInput.email } });
 });
