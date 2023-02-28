@@ -16,7 +16,7 @@ export default function Header() {
   const { data: session, status } = useSession();
   if (status === "loading")
     return (
-      <div className="fixed top-0 z-40 w-screen px-6 py-3 bg-white border shadow-md">
+      <header className="fixed top-0 z-40 w-screen px-6 py-3 bg-white border shadow-md">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center relative z-[99]">
             <Image
@@ -54,12 +54,12 @@ export default function Header() {
             />
           </div>
         </div>
-      </div>
+      </header>
     );
 
   if (status === "unauthenticated")
     return (
-      <div className="fixed top-0 z-50 w-screen px-6 py-3 bg-white border shadow-md">
+      <header className="fixed top-0 z-50 w-screen px-6 py-3 bg-white border shadow-md">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center">
             <Image
@@ -92,12 +92,12 @@ export default function Header() {
             </>
           </div>
         </div>
-      </div>
+      </header>
     );
 
   if (status === "authenticated")
     return (
-      <div className="fixed top-0 z-50 w-screen px-6 py-3 bg-white border shadow-md">
+      <header className="fixed top-0 z-50 w-screen px-6 py-3 bg-white border shadow-md">
         <div className="flex justify-between">
           <Link href="/" className="flex items-center">
             <Image
@@ -154,7 +154,7 @@ export default function Header() {
             </button>
           </div>
         </div>
-      </div>
+      </header>
     );
   return (
     <Layout>

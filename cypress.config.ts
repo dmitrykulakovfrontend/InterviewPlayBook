@@ -1,9 +1,19 @@
 import { defineConfig } from "cypress";
+import prisma from "utils/prisma";
 
 export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      on("task", {
+        userCleanup() {
+          return new Promise(async (resolve) => {
+            await prisma.user.delete({ where: { email: "test@example.com" } });
+            resolve(true);
+          });
+        },
+      });
     },
+    baseUrl: "http://localhost:3000",
   },
 });
+
