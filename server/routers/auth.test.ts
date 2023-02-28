@@ -6,6 +6,7 @@ import { appRouter, AppRouter } from "./_app";
 import { inferProcedureInput } from "@trpc/server";
 import prisma from "utils/prisma";
 import { fail } from "assert";
+import { expect, afterAll } from "vitest";
 
 const userInput: inferProcedureInput<AppRouter["auth"]["signUp"]> = {
   email: "test@example.com",

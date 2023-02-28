@@ -1,5 +1,6 @@
 import { fetchQuestions } from "../fetchQuestions";
 import { Question } from "../validations";
+import { expect, expectTypeOf } from "vitest";
 
 describe("Fetching questions test", async () => {
   const query = {

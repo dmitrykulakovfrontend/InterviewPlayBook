@@ -2,6 +2,7 @@ import { Question } from "../validations";
 import { fetchRandomQuizzes } from "../fetchRandomQuizzes";
 import { QueryFunctionContext } from "@tanstack/react-query";
 import { Filter } from "types/filter";
+import { expect, expectTypeOf } from "vitest";
 
 describe("Fetching quizzes test", async () => {
   const query = {
