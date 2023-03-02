@@ -36,13 +36,14 @@ jobs:
           key: cypress-${{ runner.os }}-cypress-${{ hashFiles('**/package.json') }}
           restore-keys: |
             cypress-${{ runner.os }}-cypress-
-      - name: install dependencies and verify Cypress
+      - name: install dependencies, build and verify Cypress
         env:
           # make sure every Cypress install prints minimal information
           CI: 1
         # print Cypress and OS info
         run: |
           npm ci
+          npm run build
           npx cypress verify
           npx cypress info
           npx cypress version
