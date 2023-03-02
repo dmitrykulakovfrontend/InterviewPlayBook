@@ -11,6 +11,8 @@
     "vercel-build": "prisma generate && next build",
     "test:unit": "vitest",
     "test:e2e": "cypress run",
+    "e2e:record": "cypress run --record",
+    "test:ci:record": "run-p --race start e2e:record",
     "coverage:unit": "vitest run --coverage",
     "cypress": "cypress open"
   },
@@ -54,6 +56,7 @@
     "cypress": "^12.7.0",
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.3",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.18",
     "prettier": "^2.7.1",
     "prisma": "^4.7.0",
