@@ -51,6 +51,8 @@ jobs:
           npx cypress version --component binary
           npx cypress version --component electron
           npx cypress version --component node
+        env:
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
       # Starts local server, then runs Cypress tests and records results on the dashboard
       - name: Cypress tests
         run: npm run test:ci:record
