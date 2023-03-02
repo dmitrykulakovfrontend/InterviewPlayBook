@@ -8,7 +8,7 @@ env:
   # place your secret record key at
   # https://github.com/cypress-io/cypress-example-kitchensink/settings/secrets
   CYPRESS_RECORD_KEY: ${{ secrets.dashboardRecordKey }}
-  DATABASE_URL: ${{ env.DATABASE_URL }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
   TERM: xterm
 jobs:
   test1:
