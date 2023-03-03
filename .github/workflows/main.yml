@@ -46,6 +46,8 @@ jobs:
         env:
           # make sure every Cypress install prints minimal information
           CI: 1
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
         # print Cypress and OS info
         run: |
           npm ci
